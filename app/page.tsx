@@ -15,20 +15,20 @@ const SUBJECTS = [
 ];
 
 function SanctuaryConsole() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState(DEEP_QUOTES[0].text);
   const [ytId, setYtId] = useState('ko70cExuzZM'); 
+  const [selectedWords, setSelectedWords] = useState(['HARMONICA', 'BLUE']);
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
 
-  // ALPHABET LOGIC: Translates text into golden abstracts
-  const getAbstracts = (input: string) => {
-    const clean = input.replace(/[^a-zA-Z]/g, "").toUpperCase();
-    if (clean.length === 0) return ['H', 'B']; // Default placeholder
-    const first = clean[0];
-    const penult = clean.length > 1 ? clean[clean.length - 2] : first;
-    return [first, penult];
+  // LOGIC: Converts a clicked word into a tile (First letter)
+  const handleWordClick = (word: string) => {
+    const cleanWord = word.replace(/[^a-zA-Z]/g, "").toUpperCase();
+    if (cleanWord.length > 0) {
+      // Keep only the last two words clicked
+      const newSelection = [...selectedWords, cleanWord].slice(-2);
+      setSelectedWords(newSelection);
+    }
   };
-
-  const abstracts = getAbstracts(text);
 
   return (
     <main style={{ minHeight: '100vh', background: '#000', color: '#D4AF37', fontFamily: 'serif', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -66,27 +66,35 @@ function SanctuaryConsole() {
         {/* RIGHT: COGNITION CONSOLE */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
           
-          {/* ALPHABET TILES BOX: DYNAMIC */}
+          {/* DYNAMIC ALPHABET BOX */}
           <div style={{ border: '1px solid #444', borderRadius: '15px', padding: '20px', textAlign: 'center' }}>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-               {abstracts.map((ltr, i) => (
-                 <img 
-                   key={i} 
-                   src={`${bucketUrl}/${ltr}5.png`} 
-                   style={{ width: '55px', border: '1px solid #D4AF37', borderRadius: '4px' }} 
-                   alt={`Logic ${ltr}`} 
-                 />
+               {selectedWords.map((word, i) => (
+                 <div key={i} style={{ textAlign: 'center' }}>
+                   <img 
+                     src={`${bucketUrl}/${word[0]}5.png`} 
+                     style={{ width: '55px', border: '1px solid #D4AF37', borderRadius: '4px' }} 
+                     alt={word} 
+                   />
+                   <p style={{ fontSize: '0.5rem', marginTop: '5px', opacity: 0.6 }}>{word}</p>
+                 </div>
                ))}
             </div>
           </div>
 
-          <div style={{ border: '1px solid #444', borderRadius: '15px', padding: '15px', height: '300px' }}>
-            <textarea 
-              placeholder="Stash your cognition..." 
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              style={{ width: '100%', height: '100%', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '1.2rem', fontStyle: 'italic', outline: 'none', resize: 'none', lineHeight: '1.6' }}
-            />
+          {/* INTERACTIVE TEXT AREA */}
+          <div style={{ border: '1px solid #444', borderRadius: '15px', padding: '20px', minHeight: '300px', lineHeight: '1.8' }}>
+            {text.split(' ').map((word, i) => (
+              <span 
+                key={i} 
+                onClick={() => handleWordClick(word)}
+                style={{ cursor: 'pointer', fontSize: '1.2rem', fontStyle: 'italic', marginRight: '8px', transition: '0.2s' }}
+                onMouseOver={(e) => (e.currentTarget.style.color = '#FFF')}
+                onMouseOut={(e) => (e.currentTarget.style.color = '#D4AF37')}
+              >
+                {word}
+              </span>
+            ))}
           </div>
 
           <button style={{ background: '#D4AF37', color: '#000', border: 'none', padding: '18px', fontWeight: 'bold', borderRadius: '40px', cursor: 'pointer', fontSize: '1rem', letterSpacing: '2px' }}>
