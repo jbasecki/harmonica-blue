@@ -10,7 +10,7 @@ const SUBJECTS = [
 
 function SanctuaryStudio() {
   const [showIntro, setShowIntro] = useState(true);
-  const [ytId, setYtId] = useState('ko70cExuzZM'); // Ophelia as first choice
+  const [ytId, setYtId] = useState('ko70cExuzZM'); 
   const [artist, setArtist] = useState('Taylor Swift');
   const [text, setText] = useState('');
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
@@ -30,71 +30,58 @@ function SanctuaryStudio() {
   return (
     <main style={{ display: 'flex', height: '100vh', background: '#000', color: '#D4AF37', fontFamily: 'serif', position: 'relative' }}>
       
-      {/* THE CALL TO ACTION OVERLAY */}
-      {showIntro && (
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.95)', zIndex: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
-          <div style={{ maxWidth: '700px', textAlign: 'center' }}>
-            <p style={{ fontSize: '1.8rem', fontStyle: 'italic', lineHeight: '1.6', marginBottom: '30px' }}>
-              “Share a thought, a melody, a film or a quote with someone. Sharing makes a day fuller."
-            </p>
-            <p style={{ fontSize: '1.1rem', letterSpacing: '2px', marginBottom: '40px', opacity: 0.8 }}>
-              A thought shared is a thought that will live on.
-            </p>
-            <button 
-              onClick={() => { localStorage.setItem('hideHBIntro', 'true'); setShowIntro(false); }}
-              style={{ background: '#D4AF37', color: '#000', border: 'none', padding: '15px 50px', borderRadius: '30px', fontWeight: 'bold', cursor: 'pointer', letterSpacing: '2px' }}
-            >
-              I UNDERSTAND
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* LEFT: THE VIDEO SANCTUARY */}
+      {/* 1. THE STUDIO BASE (RESTORED PREVIOUS DESIGN) */}
       <div style={{ flex: 1.5, position: 'relative', borderRight: '1px solid #333' }}>
         <iframe 
           width="100%" height="100%" 
-          src={`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&rel=0&modestbranding=1`} 
+          src={`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&rel=0`} 
           frameBorder="0" allow="autoplay" 
         />
-        {/* ARTIST CORNER */}
         <div style={{ position: 'absolute', top: 20, right: 20, textAlign: 'right', textShadow: '2px 2px 4px #000' }}>
           <p style={{ fontSize: '0.6rem', margin: 0, opacity: 0.7 }}>SELECTED MELODY</p>
-          <p style={{ fontWeight: 'bold', letterSpacing: '1px' }}>{artist.toUpperCase()}</p>
+          <p style={{ fontWeight: 'bold' }}>{artist.toUpperCase()}</p>
         </div>
       </div>
 
-      {/* RIGHT: THE COGNITION CONSOLE */}
       <div style={{ flex: 1, padding: '40px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div style={{ textAlign: 'center' }}>
-          <p style={{ fontSize: '0.7rem', letterSpacing: '3px', marginBottom: '10px' }}>WORDS AS ABSTRACTS</p>
-          <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', margin: '10px 0' }}>
+          <p style={{ fontSize: '0.7rem', letterSpacing: '3px' }}>WORDS AS ABSTRACTS</p>
+          <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', margin: '15px 0' }}>
             {getAbstracts(text).map((ltr, i) => (
-              <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '70px', height: '105px', border: '1px solid #D4AF37', borderRadius: '4px' }} alt="Abstract" />
+              <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '70px', height: '105px', border: '1px solid #D4AF37' }} />
             ))}
           </div>
         </div>
-
         <textarea 
           placeholder="Stash your cognition..." 
           value={text} 
           onChange={(e) => setText(e.target.value)}
-          style={{ width: '100%', height: '180px', background: '#111', border: '1px solid #333', color: '#D4AF37', padding: '20px', fontSize: '1.2rem', borderRadius: '8px' }}
+          style={{ width: '100%', height: '180px', background: '#111', border: '1px solid #333', color: '#D4AF37', padding: '20px', fontSize: '1.2rem' }}
         />
-
-        {/* HORIZONTAL SUBJECT MENU */}
-        <div style={{ overflowX: 'auto', display: 'flex', gap: '10px', padding: '10px 0' }}>
+        <div style={{ overflowX: 'auto', display: 'flex', gap: '10px' }}>
           {SUBJECTS.map(s => (
             <button key={s.id} onClick={() => { setYtId(s.id); setArtist(s.artist); }} style={{ minWidth: '130px', padding: '10px', background: '#111', border: '1px solid #D4AF37', color: '#D4AF37', cursor: 'pointer', fontSize: '0.65rem' }}>
               {s.title.toUpperCase()}
             </button>
           ))}
         </div>
-
-        <button style={{ background: '#D4AF37', color: '#000', border: 'none', padding: '20px', fontWeight: 'bold', cursor: 'pointer', borderRadius: '4px', letterSpacing: '2px' }}>
+        <button style={{ background: '#D4AF37', color: '#000', border: 'none', padding: '20px', fontWeight: 'bold', cursor: 'pointer' }}>
           STASH & SEND ($0.99)
         </button>
       </div>
+
+      {/* 2. THE SIMPLE TEXT OVERLAY (NO BOX) */}
+      {showIntro && (
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', zIndex: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px' }}>
+          <p style={{ fontSize: '1.4rem', fontStyle: 'italic', textAlign: 'center', maxWidth: '800px', lineHeight: '1.6' }}>
+            “Share a thought, a melody, a film or a quote with someone. Sharing makes a day fuller. A thought shared is a thought that will live on.”
+          </p>
+          <div style={{ marginTop: '30px', display: 'flex', gap: '20px' }}>
+            <button onClick={() => setShowIntro(false)} style={{ background: '#D4AF37', color: '#000', border: 'none', padding: '10px 30px', borderRadius: '20px', cursor: 'pointer', fontWeight: 'bold' }}>OK</button>
+            <button onClick={() => { localStorage.setItem('hideHBIntro', 'true'); setShowIntro(false); }} style={{ background: 'none', border: '1px solid #D4AF37', color: '#D4AF37', padding: '10px 20px', borderRadius: '20px', cursor: 'pointer', fontSize: '0.7rem' }}>DON'T SHOW THIS ANYMORE</button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
