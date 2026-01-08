@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, Suspense } from 'react';
 
-// 1. DEFINING THE DATA TO FIX THE VERCEL ERROR
 const DEEP_QUOTES = [
   { label: "COSMOLOGY", text: "We are just an advanced breed of monkeys on a minor planet of a very average star. But we can understand the Universe. That makes us something very special. Quiet people have the loudest minds." },
   { label: "CINEMA", text: "I always tell the truth. Even when I lie. The work is the only thing that matters, the only thing that lives on after the career is long gone. Forget the career, do the work." },
@@ -20,19 +19,29 @@ function SanctuaryConsole() {
   const [ytId, setYtId] = useState('ko70cExuzZM'); 
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
 
+  // ALPHABET LOGIC: Translates text into golden abstracts
+  const getAbstracts = (input: string) => {
+    const clean = input.replace(/[^a-zA-Z]/g, "").toUpperCase();
+    if (clean.length === 0) return ['H', 'B']; // Default placeholder
+    const first = clean[0];
+    const penult = clean.length > 1 ? clean[clean.length - 2] : first;
+    return [first, penult];
+  };
+
+  const abstracts = getAbstracts(text);
+
   return (
     <main style={{ minHeight: '100vh', background: '#000', color: '#D4AF37', fontFamily: 'serif', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       
-      {/* MINIMALIST HEADER */}
       <div style={{ marginBottom: '20px', opacity: 0.8 }}>
         <h1 style={{ fontSize: '0.9rem', letterSpacing: '8px', margin: 0 }}>HARMONICA-BLUE.APP</h1>
       </div>
 
       <div style={{ width: '100%', maxWidth: '1000px', display: 'flex', gap: '30px', alignItems: 'flex-start' }}>
         
-        {/* LEFT: CINEMATIC INSET */}
+        {/* LEFT: ATMOSPHERIC INSET */}
         <div style={{ flex: 1.2 }}>
-          <div style={{ width: '100%', aspectRatio: '4/3', border: '1px solid #444', borderRadius: '15px', overflow: 'hidden', background: '#050505', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: '100%', aspectRatio: '4/3', border: '1px solid #444', borderRadius: '15px', overflow: 'hidden', background: '#050505' }}>
             <iframe 
                width="100%" height="100%"
                src={`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&modestbranding=1&rel=0&start=35&end=55`} 
@@ -40,7 +49,6 @@ function SanctuaryConsole() {
             />
           </div>
           
-          {/* SELECTION GRID BELOW VIDEO */}
           <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
             {DEEP_QUOTES.map((q, i) => (
               <button key={i} onClick={() => setText(q.text)} style={{ background: 'none', border: '1px solid #333', color: '#D4AF37', padding: '10px', fontSize: '0.6rem', cursor: 'pointer', borderRadius: '4px' }}>
@@ -58,21 +66,26 @@ function SanctuaryConsole() {
         {/* RIGHT: COGNITION CONSOLE */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
           
-          {/* ALPHABET TILES BOX */}
+          {/* ALPHABET TILES BOX: DYNAMIC */}
           <div style={{ border: '1px solid #444', borderRadius: '15px', padding: '20px', textAlign: 'center' }}>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-               <img src={`${bucketUrl}/H5.png`} style={{ width: '50px', border: '1px solid #D4AF37', borderRadius: '4px' }} alt="Logic" />
-               <img src={`${bucketUrl}/B5.png`} style={{ width: '50px', border: '1px solid #D4AF37', borderRadius: '4px' }} alt="Logic" />
+               {abstracts.map((ltr, i) => (
+                 <img 
+                   key={i} 
+                   src={`${bucketUrl}/${ltr}5.png`} 
+                   style={{ width: '55px', border: '1px solid #D4AF37', borderRadius: '4px' }} 
+                   alt={`Logic ${ltr}`} 
+                 />
+               ))}
             </div>
           </div>
 
-          {/* WRITING AREA */}
-          <div style={{ border: '1px solid #444', borderRadius: '15px', padding: '10px', height: '300px' }}>
+          <div style={{ border: '1px solid #444', borderRadius: '15px', padding: '15px', height: '300px' }}>
             <textarea 
               placeholder="Stash your cognition..." 
               value={text}
               onChange={(e) => setText(e.target.value)}
-              style={{ width: '100%', height: '100%', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '1.2rem', fontStyle: 'italic', outline: 'none', resize: 'none' }}
+              style={{ width: '100%', height: '100%', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '1.2rem', fontStyle: 'italic', outline: 'none', resize: 'none', lineHeight: '1.6' }}
             />
           </div>
 
