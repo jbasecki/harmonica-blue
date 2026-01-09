@@ -1,109 +1,86 @@
 'use client';
 import React, { useState, Suspense } from 'react';
 
-const DEEP_QUOTES = [
-  { label: "COSMOLOGY", text: "We are just an advanced breed of monkeys on a minor planet of a very average star. But we can understand the Universe. That makes us something very special. Quiet people have the loudest minds." },
-  { label: "CINEMA", text: "I always tell the truth. Even when I lie. The work is the only thing that matters, the only thing that lives on after the career is long gone. Forget the career, do the work." },
-  { label: "THE MISSION", text: "Share a thought, a melody, a film or a quote with someone. Sharing makes a day fuller. A thought shared is a thought that will live on. This is your sanctuary." }
-];
-
-const SUBJECTS = [
-  { title: "OPHELIA", id: "ko70cExuzZM" },
-  { title: "SONNY BOY", id: "pA_v070D1iE" },
-  { title: "CLAIR DE LUNE", id: "W0LHTWG-UmQ" },
-  { title: "ABSTRACT GOLD", id: "E6M8qYn7KzQ" }
-];
-
-function SanctuaryConsole() {
-  const [text, setText] = useState(DEEP_QUOTES[0].text);
-  const [ytId, setYtId] = useState('ko70cExuzZM'); 
-  const [selectedWords, setSelectedWords] = useState(['HARMONICA', 'BLUE']);
+export default function GiftSanctuary() {
+  const [text, setText] = useState('');
+  const [toName, setToName] = useState('');
+  const [fromName, setFromName] = useState('');
+  const [ytLink, setYtLink] = useState('');
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
 
-  // LOGIC: Converts a clicked word into a tile (First letter)
-  const handleWordClick = (word: string) => {
-    const cleanWord = word.replace(/[^a-zA-Z]/g, "").toUpperCase();
-    if (cleanWord.length > 0) {
-      // Keep only the last two words clicked
-      const newSelection = [...selectedWords, cleanWord].slice(-2);
-      setSelectedWords(newSelection);
-    }
-  };
-
   return (
-    <main style={{ minHeight: '100vh', background: '#000', color: '#D4AF37', fontFamily: 'serif', padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', fontFamily: 'serif', position: 'relative', overflow: 'hidden' }}>
       
-      <div style={{ marginBottom: '20px', opacity: 0.8 }}>
-        <h1 style={{ fontSize: '0.9rem', letterSpacing: '8px', margin: 0 }}>HARMONICA-BLUE.APP</h1>
+      {/* FULL-SCREEN CINEMATIC BACKGROUND */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
+        <iframe 
+          width="100%" height="100%" 
+          src="https://www.youtube-nocookie.com/embed/ko70cExuzZM?autoplay=1&mute=1&loop=1&playlist=ko70cExuzZM&controls=0&modestbranding=1" 
+          frameBorder="0" style={{ objectFit: 'cover', opacity: 0.6 }} // Lowered opacity for better text visibility
+        />
       </div>
 
-      <div style={{ width: '100%', maxWidth: '1000px', display: 'flex', gap: '30px', alignItems: 'flex-start' }}>
+      {/* UI OVERLAY LAYER */}
+      <div style={{ position: 'relative', zIndex: 2, height: '100%', padding: '40px', display: 'flex', justifyContent: 'space-between' }}>
         
-        {/* LEFT: ATMOSPHERIC INSET */}
-        <div style={{ flex: 1.2 }}>
-          <div style={{ width: '100%', aspectRatio: '4/3', border: '1px solid #444', borderRadius: '15px', overflow: 'hidden', background: '#050505' }}>
-            <iframe 
-               width="100%" height="100%"
-               src={`https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&loop=1&playlist=${ytId}&controls=0&modestbranding=1&rel=0&start=35&end=55`} 
-               frameBorder="0" allow="autoplay"
-            />
-          </div>
-          
-          <div style={{ marginTop: '20px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-            {DEEP_QUOTES.map((q, i) => (
-              <button key={i} onClick={() => setText(q.text)} style={{ background: 'none', border: '1px solid #333', color: '#D4AF37', padding: '10px', fontSize: '0.6rem', cursor: 'pointer', borderRadius: '4px' }}>
-                {q.label}
-              </button>
-            ))}
-            {SUBJECTS.map((s) => (
-              <button key={s.id} onClick={() => setYtId(s.id)} style={{ background: 'none', border: '1px solid #333', color: '#D4AF37', padding: '10px', fontSize: '0.6rem', cursor: 'pointer', borderRadius: '4px' }}>
-                {s.title}
-              </button>
-            ))}
+        {/* LEFT: THE MELODY PLAYER */}
+        <div style={{ alignSelf: 'flex-end', width: '250px', background: 'rgba(0,0,0,0.7)', border: '1px solid #D4AF37', padding: '20px', borderRadius: '15px' }}>
+          <p style={{ fontSize: '0.6rem', letterSpacing: '2px', opacity: 0.7 }}>SURPRISE MELODY</p>
+          <input 
+            placeholder="Paste YouTube Link..." 
+            onChange={(e) => setYtLink(e.target.value)}
+            style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: '1px solid #333', color: '#D4AF37', fontSize: '0.7rem', marginTop: '10px' }}
+          />
+          <div style={{ marginTop: '15px', height: '40px', border: '1px solid #D4AF37', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', cursor: 'pointer' }}>
+            PLAY SONG
           </div>
         </div>
 
-        {/* RIGHT: COGNITION CONSOLE */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        {/* CENTER: COGNITION & ALPHABET LOGIC */}
+        <div style={{ flex: 1, maxWidth: '500px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', marginTop: '100px' }}>
+          <div style={{ display: 'flex', gap: '15px' }}>
+             <img src={`${bucketUrl}/H5.png`} style={{ width: '60px', border: '1px solid #D4AF37' }} />
+             <img src={`${bucketUrl}/B5.png`} style={{ width: '60px', border: '1px solid #D4AF37' }} />
+          </div>
           
-          {/* DYNAMIC ALPHABET BOX */}
-          <div style={{ border: '1px solid #444', borderRadius: '15px', padding: '20px', textAlign: 'center' }}>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-               {selectedWords.map((word, i) => (
-                 <div key={i} style={{ textAlign: 'center' }}>
-                   <img 
-                     src={`${bucketUrl}/${word[0]}5.png`} 
-                     style={{ width: '55px', border: '1px solid #D4AF37', borderRadius: '4px' }} 
-                     alt={word} 
-                   />
-                   <p style={{ fontSize: '0.5rem', marginTop: '5px', opacity: 0.6 }}>{word}</p>
-                 </div>
-               ))}
-            </div>
+          <textarea 
+            placeholder="Write your stashed greeting..."
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            style={{ width: '100%', height: '150px', background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.5rem', fontStyle: 'italic', color: '#D4AF37', outline: 'none' }}
+          />
+
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button style={{ padding: '8px 20px', background: 'none', border: '1px solid #D4AF37', color: '#D4AF37', fontSize: '0.7rem' }}>QUOTE PICKER</button>
+            <button style={{ padding: '8px 20px', background: 'none', border: '1px solid #333', color: '#D4AF37', fontSize: '0.7rem' }}>SKIP</button>
           </div>
 
-          {/* INTERACTIVE TEXT AREA */}
-          <div style={{ border: '1px solid #444', borderRadius: '15px', padding: '20px', minHeight: '300px', lineHeight: '1.8' }}>
-            {text.split(' ').map((word, i) => (
-              <span 
-                key={i} 
-                onClick={() => handleWordClick(word)}
-                style={{ cursor: 'pointer', fontSize: '1.2rem', fontStyle: 'italic', marginRight: '8px', transition: '0.2s' }}
-                onMouseOver={(e) => (e.currentTarget.style.color = '#FFF')}
-                onMouseOut={(e) => (e.currentTarget.style.color = '#D4AF37')}
-              >
-                {word}
-              </span>
-            ))}
-          </div>
-
-          <button style={{ background: '#D4AF37', color: '#000', border: 'none', padding: '18px', fontWeight: 'bold', borderRadius: '40px', cursor: 'pointer', fontSize: '1rem', letterSpacing: '2px' }}>
+          <button style={{ background: '#D4AF37', color: '#000', padding: '15px 60px', borderRadius: '40px', fontWeight: 'bold', marginTop: '20px' }}>
             STASH & SEND
           </button>
         </div>
+
+        {/* RIGHT: THE NAMES (TO & FROM) */}
+        <div style={{ width: '300px', textAlign: 'right', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+          <div>
+            <p style={{ fontSize: '0.7rem', letterSpacing: '3px', opacity: 0.5 }}>TO:</p>
+            <input 
+              placeholder="RECEIVER NAME" 
+              onChange={(e) => setToName(e.target.value)}
+              style={{ width: '100%', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '2rem', textAlign: 'right', outline: 'none' }}
+            />
+          </div>
+          <div>
+            <p style={{ fontSize: '0.7rem', letterSpacing: '3px', opacity: 0.5 }}>FROM:</p>
+            <input 
+              placeholder="SENDER NAME" 
+              onChange={(e) => setFromName(e.target.value)}
+              style={{ width: '100%', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '2rem', textAlign: 'right', outline: 'none' }}
+            />
+          </div>
+        </div>
+
       </div>
     </main>
   );
 }
-
-export default function Home() { return <Suspense><SanctuaryConsole /></Suspense>; }
