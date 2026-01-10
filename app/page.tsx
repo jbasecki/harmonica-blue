@@ -1,6 +1,9 @@
 'use client';
 import React, { useState, Suspense } from 'react';
 
+// Use a standard cursive fallback or import a Google Font like 'Dancing Script' or 'Great Vibes'
+const signatureFont = "'Dancing Script', 'Great Vibes', cursive";
+
 const BG_CREDITS = [
   "BBC: African Savannah", "National Geographic: Deep Ocean", "Discovery: Arctic Tundra",
   "BBC: Amazon Rainforest", "Author: Alpine Peaks", "Discovery: Desert Dunes",
@@ -24,11 +27,8 @@ function DiscoverySanctuary() {
     const clean = name.replace(/[^a-zA-Z]/g, "").toUpperCase();
     if (clean.length === 0) return ['H', 'B']; 
     if (clean.length === 1) return [clean[0], clean[0]];
-    
     const first = clean[0];
-    // Grab the second-to-last character
     const penultimate = clean.length > 2 ? clean[clean.length - 2] : clean[1];
-    
     return [first, penultimate];
   };
 
@@ -37,7 +37,7 @@ function DiscoverySanctuary() {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', fontFamily: 'serif', overflow: 'hidden', position: 'relative' }}>
       
-      {/* 1. BACKGROUND: Muted + playsInline for Auto-Play Support */}
+      {/* 1. BACKGROUND: Nature Video */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video 
           key={bgIndex} autoPlay muted loop playsInline
@@ -51,23 +51,29 @@ function DiscoverySanctuary() {
       <div style={{ position: 'absolute', top: '3vh', left: '4vw', zIndex: 3 }}>
         <p style={{ fontSize: '0.35rem', fontStyle: 'italic', opacity: 0.4 }}>Visual by {BG_CREDITS[bgIndex]}</p>
       </div>
-      <div style={{ position: 'absolute', top: '3vh', right: '4vw', zIndex: 3, textAlign: 'right' }}>
-        <div style={{ display: 'inline-block', width: '18px', height: '10px', border: '0.5px solid rgba(212,175,55,0.6)', marginBottom: '3px' }}></div>
-        <p style={{ fontSize: '0.3rem', letterSpacing: '2px', opacity: 0.5 }}>harmonica-blue.app</p>
-      </div>
 
-      {/* 3. AUTO-SIGNED ART TILES */}
+      {/* 3. CENTERED ART & GOLDEN SIGNATURE */}
       <div style={{ position: 'relative', zIndex: 2, height: '100%', width: '100%', display: 'flex', flexDirection: 'column', padding: '5vh 6vw', boxSizing: 'border-box' }}>
-        <div style={{ flex: 1.2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ flex: 1.2, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '15px' }}>
+          
+          {/* ART TILES */}
           <div style={{ display: 'flex', gap: '8px' }}>
              {tiles.map((ltr, i) => (
-               <img 
-                 key={i} 
-                 src={`${bucketUrl}/${ltr}5.png`} // Dynamic fetch based on refined logic
-                 style={{ width: '32px', border: '0.3px solid #D4AF37', borderRadius: '2px' }} 
-                 alt={`Art ${ltr}`} 
-               />
+               <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '32px', border: '0.3px solid #D4AF37', borderRadius: '2px' }} alt="Art" />
              ))}
+          </div>
+
+          {/* NEW: GOLDEN CURSIVE SIGNATURE */}
+          <div style={{ 
+            fontFamily: signatureFont, 
+            fontSize: '1.8rem', 
+            color: '#D4AF37', 
+            textShadow: '0 0 8px rgba(212,175,55,0.4)',
+            opacity: toName ? 0.9 : 0,
+            transition: 'opacity 0.5s ease',
+            marginTop: '-5px'
+          }}>
+            {toName}
           </div>
         </div>
 
@@ -86,12 +92,7 @@ function DiscoverySanctuary() {
             />
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '2px' }}>
               {[...Array(19)].map((_, i) => (
-                <button 
-                  key={i} onClick={() => setBgIndex(i)}
-                  style={{ width: '14px', height: '12px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.3px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.28rem', cursor: 'pointer' }}
-                >
-                  {i + 1}
-                </button>
+                <button key={i} onClick={() => setBgIndex(i)} style={{ width: '14px', height: '12px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.3px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.28rem', cursor: 'pointer' }}>{i + 1}</button>
               ))}
             </div>
             <button style={{ background: '#D4AF37', color: '#000', padding: '6px 22px', borderRadius: '15px', fontWeight: 'bold', border: 'none', cursor: 'pointer', fontSize: '0.5rem', letterSpacing: '2px', marginTop: '8px' }}>
@@ -102,11 +103,7 @@ function DiscoverySanctuary() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '4px' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
               <p style={{ fontSize: '0.3rem', opacity: 0.4, letterSpacing: '2px', margin: 0 }}>TO:</p>
-              <input placeholder="NAME" value={toName} onChange={(e) => setToName(e.target.value)} style={{ width: '80px', background: 'transparent', border: 'none', borderBottom: '0.3px solid #333', color: '#D4AF37', fontSize: '0.6rem', textAlign: 'right', outline: 'none' }} />
-            </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <p style={{ fontSize: '0.3rem', opacity: 0.4, letterSpacing: '2px', margin: 0 }}>FROM:</p>
-              <input placeholder="NAME" value={fromName} onChange={(e) => setFromName(e.target.value)} style={{ width: '80px', background: 'transparent', border: 'none', borderBottom: '0.3px solid #333', color: '#D4AF37', fontSize: '0.6rem', textAlign: 'right', outline: 'none' }} />
+              <input placeholder="NAME" value={toName} onChange={(e) => setToName(e.target.value)} style={{ width: '90px', background: 'transparent', border: 'none', borderBottom: '0.3px solid #333', color: '#D4AF37', fontSize: '0.6rem', textAlign: 'right', outline: 'none' }} />
             </div>
           </div>
         </div>
