@@ -14,7 +14,7 @@ function DiscoverySanctuary() {
   const [text, setText] = useState('Be strong and courageous.');
   const [bgIndex, setBgIndex] = useState(17);
   const [fontChoice, setFontChoice] = useState(0);
-  const [isReceiver, setIsReceiver] = useState(true);
+  const [isReceiver, setIsReceiver] = useState(false); // SET TO FALSE TO EDIT
   const [isPlayerEnlarged, setIsPlayerEnlarged] = useState(false);
   const [quoteCat, setQuoteCat] = useState<null | keyof typeof QUOTES>(null);
 
@@ -33,9 +33,9 @@ function DiscoverySanctuary() {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* 1. BACKGROUND VIDEO */}
+      {/* 1. CINEMATIC BACKGROUND */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
-        <video key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.55 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
+        <video key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.8))' }} />
       </div>
 
@@ -46,39 +46,32 @@ function DiscoverySanctuary() {
       </div>
       
       <div onClick={() => setIsReceiver(!isReceiver)} style={{ position: 'absolute', top: '4vh', right: '6vw', zIndex: 10, cursor: 'pointer', textAlign: 'right' }}>
-        <p style={{ fontSize: '0.4rem', letterSpacing: '2px', opacity: 0.8, marginBottom: '2px' }}>{isReceiver ? 'REPLY' : 'CLOSE'}</p>
+        <p style={{ fontSize: '0.45rem', letterSpacing: '2px', opacity: 0.8, marginBottom: '2px' }}>{isReceiver ? 'REPLY' : 'CLOSE'}</p>
         <p style={{ fontSize: '0.35rem', fontStyle: 'italic', opacity: 0.4 }}>Visual by {BG_CREDITS[bgIndex]}</p>
       </div>
 
-      {/* 3. CENTERED ALIGNMENT COLUMN */}
+      {/* 3. CENTER COLUMN ALIGNMENT */}
       <div style={{ position: 'relative', zIndex: 2, height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '12vh 0 5vh', boxSizing: 'border-box' }}>
         
-        {/* CENTER COLUMN: Locked to 400px width for alignment */}
         <div style={{ width: '400px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', textAlign: 'center' }}>
           
-          {/* ART TILES */}
           <div style={{ display: 'flex', gap: '10px' }}>
              {tiles.map((ltr, i) => (
                <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '35px', border: '0.5px solid #D4AF37', borderRadius: '3px' }} alt="Art" />
              ))}
           </div>
 
-          {/* NAME */}
-          <div onClick={() => setFontChoice(fontChoice === 0 ? 1 : 0)} style={{ fontFamily: fonts[fontChoice], fontSize: '1.8rem', cursor: 'pointer' }}>
+          <div onClick={() => setFontChoice(fontChoice === 0 ? 1 : 0)} style={{ fontFamily: fonts[fontChoice], fontSize: '2.2rem', cursor: 'pointer' }}>
             {toName}
           </div>
 
-          {/* GREETING */}
           <textarea 
             disabled={isReceiver}
             value={text} onChange={(e) => setText(e.target.value)}
-            style={{ 
-              width: '100%', height: '120px', background: 'transparent', border: 'none', textAlign: 'center', 
-              fontSize: '1.8rem', fontFamily: fonts[fontChoice], color: '#D4AF37', outline: 'none', resize: 'none' 
-            }} 
+            style={{ width: '100%', height: '120px', background: 'transparent', border: 'none', textAlign: 'center', fontSize: '2rem', fontFamily: fonts[fontChoice], color: '#D4AF37', outline: 'none', resize: 'none' }} 
           />
 
-          {/* DASHBOARD ELEMENTS (Only in Creation Mode) */}
+          {/* DASHBOARD ELEMENTS (Only shows if NOT isReceiver) */}
           {!isReceiver && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px', width: '100%' }}>
               <div style={{ display: 'flex', gap: '10px' }}>
@@ -98,29 +91,29 @@ function DiscoverySanctuary() {
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '4px' }}>
                 {[...Array(19)].map((_, i) => (
-                  <button key={i} onClick={() => setBgIndex(i)} style={{ width: '16px', height: '14px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.3px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.35rem' }}>{i + 1}</button>
+                  <button key={i} onClick={() => setBgIndex(i)} style={{ width: '18px', height: '16px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.3px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.4rem' }}>{i + 1}</button>
                 ))}
               </div>
 
-              <button style={{ background: '#D4AF37', color: '#000', padding: '8px 40px', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.65rem', border: 'none' }}>STASH & SEND</button>
+              <button style={{ background: '#D4AF37', color: '#000', padding: '10px 45px', borderRadius: '25px', fontWeight: 'bold', fontSize: '0.7rem', border: 'none', cursor: 'pointer' }}>STASH & SEND</button>
             </div>
           )}
         </div>
 
-        {/* 4. LOWER HORIZON (Names & Music) */}
+        {/* 4. LOWER HORIZON (Music & Name Input) */}
         <div style={{ position: 'absolute', bottom: '5vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div 
             onClick={() => setIsPlayerEnlarged(!isPlayerEnlarged)}
-            style={{ width: isPlayerEnlarged ? '300px' : '180px', background: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '6px', border: '0.3px solid #D4AF37', cursor: 'pointer', transition: 'width 0.3s' }}
+            style={{ width: isPlayerEnlarged ? '320px' : '200px', background: 'rgba(0,0,0,0.4)', padding: '12px', borderRadius: '8px', border: '0.5px solid #D4AF37', cursor: 'pointer', transition: 'width 0.3s' }}
           >
-             <p style={{ fontSize: '0.35rem', opacity: 0.5 }}>{isPlayerEnlarged ? 'ENLARGED PLAYER' : 'GIFTED MELODY'}</p>
-             <div style={{ height: '20px', border: '0.5px solid #D4AF37', marginTop: '5px', textAlign: 'center', fontSize: '0.5rem' }}>PLAY</div>
+             <p style={{ fontSize: '0.4rem', letterSpacing: '1px', opacity: 0.6 }}>{isPlayerEnlarged ? 'ENLARGED PLAYER' : 'GIFTED MELODY'}</p>
+             <div style={{ height: '25px', border: '0.5px solid #D4AF37', marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem' }}>PLAY</div>
           </div>
 
           {!isReceiver && (
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <p style={{ fontSize: '0.4rem', opacity: 0.4 }}>TO:</p>
-              <input value={toName} onChange={(e) => setToName(e.target.value)} style={{ width: '90px', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.7rem', textAlign: 'right', outline: 'none' }} />
+              <p style={{ fontSize: '0.45rem', opacity: 0.4 }}>TO:</p>
+              <input value={toName} onChange={(e) => setToName(e.target.value)} style={{ width: '100px', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right', outline: 'none' }} />
             </div>
           )}
         </div>
