@@ -12,21 +12,24 @@ const BG_CREDITS = [
 ];
 
 function DiscoverySanctuary() {
-  const [text, setText] = useState('');
   const [toName, setToName] = useState('');
   const [fromName, setFromName] = useState('');
-  const [bgIndex, setBgIndex] = useState(16); // Default to #17
+  const [text, setText] = useState('');
+  const [bgIndex, setBgIndex] = useState(13); // Button 14
   
-  // YOUR LIVE BUCKET URL
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
 
-  // ALPHABET LOGIC: Converts "To" name into Gold Art Tiles
+  // REFINED ALPHABET LOGIC: First letter and one before the last
   const getReceiverArt = (name: string) => {
     const clean = name.replace(/[^a-zA-Z]/g, "").toUpperCase();
-    if (clean.length === 0) return ['H', 'B']; // Placeholder initials
+    if (clean.length === 0) return ['H', 'B']; 
+    if (clean.length === 1) return [clean[0], clean[0]];
+    
     const first = clean[0];
-    const second = clean.length > 1 ? clean[1] : clean[0];
-    return [first, second];
+    // Grab the second-to-last character
+    const penultimate = clean.length > 2 ? clean[clean.length - 2] : clean[1];
+    
+    return [first, penultimate];
   };
 
   const tiles = getReceiverArt(toName);
@@ -34,17 +37,17 @@ function DiscoverySanctuary() {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', fontFamily: 'serif', overflow: 'hidden', position: 'relative' }}>
       
-      {/* 1. THE NATURE GALLERY (Fetched from Bucket) */}
+      {/* 1. BACKGROUND: Muted + playsInline for Auto-Play Support */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video 
-          key={bgIndex} autoPlay loop playsInline
-          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }}
+          key={bgIndex} autoPlay muted loop playsInline
+          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.65 }}
           src={`${bucketUrl}/nature-clip-${bgIndex + 1}.mp4`} 
         />
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.85))' }} />
       </div>
 
-      {/* 2. TOP FRAME: CREDITS & BRAND */}
+      {/* 2. GALLERY FRAME */}
       <div style={{ position: 'absolute', top: '3vh', left: '4vw', zIndex: 3 }}>
         <p style={{ fontSize: '0.35rem', fontStyle: 'italic', opacity: 0.4 }}>Visual by {BG_CREDITS[bgIndex]}</p>
       </div>
@@ -53,16 +56,16 @@ function DiscoverySanctuary() {
         <p style={{ fontSize: '0.3rem', letterSpacing: '2px', opacity: 0.5 }}>harmonica-blue.app</p>
       </div>
 
-      {/* 3. ALPHABET LOGIC DISPLAY */}
+      {/* 3. AUTO-SIGNED ART TILES */}
       <div style={{ position: 'relative', zIndex: 2, height: '100%', width: '100%', display: 'flex', flexDirection: 'column', padding: '5vh 6vw', boxSizing: 'border-box' }}>
         <div style={{ flex: 1.2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: '8px' }}>
              {tiles.map((ltr, i) => (
                <img 
                  key={i} 
-                 src={`${bucketUrl}/${ltr}5.png`} // Dynamic Fetch: e.g., "M5.png"
+                 src={`${bucketUrl}/${ltr}5.png`} // Dynamic fetch based on refined logic
                  style={{ width: '32px', border: '0.3px solid #D4AF37', borderRadius: '2px' }} 
-                 alt={`Letter ${ltr}`} 
+                 alt={`Art ${ltr}`} 
                />
              ))}
           </div>
@@ -71,10 +74,9 @@ function DiscoverySanctuary() {
         {/* 4. DASHBOARD HORIZON */}
         <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           
-          <div style={{ background: 'rgba(0,0,0,0.3)', border: '0.3px solid rgba(212,175,55,0.2)', padding: '10px', borderRadius: '6px', width: '160px' }}>
+          <div style={{ background: 'rgba(0,0,0,0.3)', border: '0.3px solid rgba(212,175,55,0.2)', padding: '10px', borderRadius: '6px', width: '170px' }}>
             <p style={{ fontSize: '0.3rem', letterSpacing: '2px', marginBottom: '5px', opacity: 0.5 }}>GIFTED MELODY</p>
             <input placeholder="Paste Link..." style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: '0.3px solid #333', color: '#D4AF37', fontSize: '0.6rem' }} />
-            <div style={{ marginTop: '10px', height: '22px', border: '0.5px solid #D4AF37', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.45rem', cursor: 'pointer' }}>PLAY GIFT</div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', maxWidth: '350px', marginBottom: '5px' }}>
