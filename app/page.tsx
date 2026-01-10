@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, Suspense } from 'react';
 
-// Keep these in the code for instant loading
 const BG_CREDITS = [
   "BBC: African Savannah", "National Geographic: Deep Ocean", "Discovery: Arctic Tundra",
   "BBC: Amazon Rainforest", "Author: Alpine Peaks", "Discovery: Desert Dunes",
@@ -16,16 +15,18 @@ function DiscoverySanctuary() {
   const [text, setText] = useState('');
   const [toName, setToName] = useState('');
   const [fromName, setFromName] = useState('');
-  const [bgIndex, setBgIndex] = useState(16); // Default 17
+  const [bgIndex, setBgIndex] = useState(16); // Default to #17
   
-  // YOUR GOOGLE BUCKET URL
+  // YOUR LIVE BUCKET URL
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
 
-  // ALPHABET LOGIC: Pulls tiles from bucket
+  // ALPHABET LOGIC: Converts "To" name into Gold Art Tiles
   const getReceiverArt = (name: string) => {
     const clean = name.replace(/[^a-zA-Z]/g, "").toUpperCase();
-    if (clean.length === 0) return ['H', 'B']; // Placeholder tiles
-    return [clean[0], clean.length > 1 ? clean[1] : clean[0]];
+    if (clean.length === 0) return ['H', 'B']; // Placeholder initials
+    const first = clean[0];
+    const second = clean.length > 1 ? clean[1] : clean[0];
+    return [first, second];
   };
 
   const tiles = getReceiverArt(toName);
@@ -33,7 +34,7 @@ function DiscoverySanctuary() {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', fontFamily: 'serif', overflow: 'hidden', position: 'relative' }}>
       
-      {/* 1. VIDEO FROM BUCKET (Unmuted Nature Sound) */}
+      {/* 1. THE NATURE GALLERY (Fetched from Bucket) */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video 
           key={bgIndex} autoPlay loop playsInline
@@ -43,43 +44,39 @@ function DiscoverySanctuary() {
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.85))' }} />
       </div>
 
-      {/* 2. TOP CORNER GALLERY LABELS */}
+      {/* 2. TOP FRAME: CREDITS & BRAND */}
       <div style={{ position: 'absolute', top: '3vh', left: '4vw', zIndex: 3 }}>
-        <p style={{ fontSize: '0.35rem', fontStyle: 'italic', letterSpacing: '1px', opacity: 0.4 }}>
-          Visual by {BG_CREDITS[bgIndex]}
-        </p>
+        <p style={{ fontSize: '0.35rem', fontStyle: 'italic', opacity: 0.4 }}>Visual by {BG_CREDITS[bgIndex]}</p>
       </div>
-
       <div style={{ position: 'absolute', top: '3vh', right: '4vw', zIndex: 3, textAlign: 'right' }}>
         <div style={{ display: 'inline-block', width: '18px', height: '10px', border: '0.5px solid rgba(212,175,55,0.6)', marginBottom: '3px' }}></div>
         <p style={{ fontSize: '0.3rem', letterSpacing: '2px', opacity: 0.5 }}>harmonica-blue.app</p>
       </div>
 
-      {/* 3. CENTERED PERSONALIZED ART (Alphabet Tiles) */}
+      {/* 3. ALPHABET LOGIC DISPLAY */}
       <div style={{ position: 'relative', zIndex: 2, height: '100%', width: '100%', display: 'flex', flexDirection: 'column', padding: '5vh 6vw', boxSizing: 'border-box' }}>
         <div style={{ flex: 1.2, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: '8px' }}>
              {tiles.map((ltr, i) => (
                <img 
                  key={i} 
-                 src={`${bucketUrl}/${ltr}5.png`} // Fetches e.g. A5.png, B5.png
+                 src={`${bucketUrl}/${ltr}5.png`} // Dynamic Fetch: e.g., "M5.png"
                  style={{ width: '32px', border: '0.3px solid #D4AF37', borderRadius: '2px' }} 
-                 alt="Personal Art Tile" 
+                 alt={`Letter ${ltr}`} 
                />
              ))}
           </div>
         </div>
 
-        {/* 4. DASHBOARD */}
+        {/* 4. DASHBOARD HORIZON */}
         <div style={{ flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          {/* PLAYER */}
+          
           <div style={{ background: 'rgba(0,0,0,0.3)', border: '0.3px solid rgba(212,175,55,0.2)', padding: '10px', borderRadius: '6px', width: '160px' }}>
             <p style={{ fontSize: '0.3rem', letterSpacing: '2px', marginBottom: '5px', opacity: 0.5 }}>GIFTED MELODY</p>
             <input placeholder="Paste Link..." style={{ width: '100%', background: 'transparent', border: 'none', borderBottom: '0.3px solid #333', color: '#D4AF37', fontSize: '0.6rem' }} />
             <div style={{ marginTop: '10px', height: '22px', border: '0.5px solid #D4AF37', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.45rem', cursor: 'pointer' }}>PLAY GIFT</div>
           </div>
 
-          {/* GREETING & PICKER */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', maxWidth: '350px', marginBottom: '5px' }}>
             <textarea 
               placeholder="Write your greeting..." value={text} onChange={(e) => setText(e.target.value)}
@@ -100,7 +97,6 @@ function DiscoverySanctuary() {
             </button>
           </div>
 
-          {/* TO/FROM NAMES */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingBottom: '4px' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
               <p style={{ fontSize: '0.3rem', opacity: 0.4, letterSpacing: '2px', margin: 0 }}>TO:</p>
