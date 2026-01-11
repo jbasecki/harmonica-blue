@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, Suspense } from 'react';
 
-const BG_CREDITS = ["BBC: Savannah", "NatGeo: Ocean", "Discovery: Tundra", "BBC: Rainforest", "Alpine Peaks", "Desert Dunes", "Coral Reefs", "Redwoods", "Storm Clouds", "Serengeti", "Galaxy", "Misty Forest", "Great Barrier Reef", "Volcanic Flow", "Night Sky", "NatGeo: Tundra", "Waterfall", "Coastal Cliffs", "Grasslands"];
+// Simplified to the 10 retained videos
+const BG_CREDITS = ["BBC: Savannah", "NatGeo: Ocean", "Discovery: Tundra", "BBC: Rainforest", "Alpine Peaks", "Desert Dunes", "Coral Reefs", "Redwoods", "Storm Clouds", "Serengeti"];
 
 const QUOTES = {
   Birthday: ["May your day be filled with light.", "Another year of wisdom.", "Cheers to the journey ahead."],
@@ -12,9 +13,13 @@ const QUOTES = {
 function DiscoverySanctuary() {
   const [toName, setToName] = useState('Mark');
   const [text, setText] = useState('Be strong and courageous.');
-  const [bgIndex, setBgIndex] = useState(17);
+  const [bgIndex, setBgIndex] = useState(0);
   const [isReceiver, setIsReceiver] = useState(false);
   const [quoteCat, setQuoteCat] = useState<null | keyof typeof QUOTES>(null);
+  
+  // PLAYER LOGIC: State to track if music is playing and the YouTube ID
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [youtubeId, setYoutubeId] = useState('dQw4w9WgXcQ'); // Default placeholder ID
 
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const traditionalCursive = "'Great Vibes', cursive"; 
@@ -37,7 +42,7 @@ function DiscoverySanctuary() {
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.15)' }} />
       </div>
 
-      {/* 2. CENTERED HEADER - FULL SCALE */}
+      {/* 2. CENTERED HEADER */}
       <div style={{ position: 'absolute', top: '5vh', left: '0', width: '100%', zIndex: 3, textAlign: 'center' }}>
         <h1 style={{ fontSize: '1.6rem', letterSpacing: '20px', margin: 0, fontWeight: 300, color: '#D4AF37', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>HARMONICA</h1>
       </div>
@@ -50,68 +55,31 @@ function DiscoverySanctuary() {
       {/* 3. CENTER COLUMN ENGINE */}
       <div style={{ position: 'relative', zIndex: 2, height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* SIGNATURE: Tiles & Small Traditional Name */}
-        <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', position: 'relative' }}>
+        {/* SIGNATURE AREA */}
+        <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
              <div style={{ display: 'flex', gap: '12px' }}>
                {tiles.map((ltr, i) => (
                  <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '55px', border: '0.6px solid #D4AF37', borderRadius: '4px' }} alt="Art" />
                ))}
              </div>
-             {/* [I] INFO ICON */}
-             <div 
-               title="Your name was translated into abstract tiles to be imagined in a visual manner."
-               style={{ width: '18px', height: '18px', border: '0.8px solid #D4AF37', borderRadius: '50%', fontSize: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'help', opacity: 0.6 }}
-             >I</div>
+             <div title="Your name was translated into abstract tiles to be imagined in a visual manner." style={{ width: '18px', height: '18px', border: '0.8px solid #D4AF37', borderRadius: '50%', fontSize: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'help', opacity: 0.6 }}>I</div>
           </div>
-          <div style={{ fontFamily: traditionalCursive, fontSize: '1.4rem', color: '#D4AF37', letterSpacing: '1px' }}>
-            {toName}
-          </div>
+          <div style={{ fontFamily: traditionalCursive, fontSize: '1.4rem', color: '#D4AF37', letterSpacing: '1px' }}>{toName}</div>
         </div>
 
-        {/* 4. THE GLASS VESSEL - LOWER THIRD ANCHOR */}
-        <div style={{ 
-          marginTop: 'auto', 
-          marginBottom: '12vh',
-          width: '85%', 
-          maxWidth: '650px', 
-          minHeight: '320px',
-          background: 'rgba(255, 255, 255, 0.08)', 
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          borderRadius: '50px',
-          padding: '45px 35px',
-          border: '0.6px solid rgba(212, 175, 55, 0.3)',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
-        }}>
-          {/* GREETING TEXT - Traditional & Elegant */}
+        {/* 4. THE GLASS VESSEL */}
+        <div style={{ marginTop: 'auto', marginBottom: '12vh', width: '85%', maxWidth: '650px', minHeight: '320px', background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', borderRadius: '50px', padding: '45px 35px', border: '0.6px solid rgba(212, 175, 55, 0.3)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
+          
           <textarea 
             disabled={isReceiver}
             value={text} 
             onChange={(e) => setText(e.target.value)}
-            style={{ 
-              width: '100%', 
-              height: '80px', 
-              background: 'transparent', 
-              border: 'none', 
-              textAlign: 'center', 
-              fontSize: '1.25rem', 
-              fontFamily: traditionalCursive, 
-              color: '#D4AF37', 
-              outline: 'none', 
-              resize: 'none',
-              lineHeight: '1.6'
-            }} 
+            style={{ width: '100%', height: '80px', background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.25rem', fontFamily: traditionalCursive, color: '#D4AF37', outline: 'none', resize: 'none', lineHeight: '1.6' }} 
           />
 
           {!isReceiver && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '22px', width: '100%' }}>
-              
-              {/* QUOTE DASHBOARD - Full Size but Bottom-Anchored */}
               <div style={{ display: 'flex', gap: '10px' }}>
                  {Object.keys(QUOTES).map((cat) => (
                    <button key={cat} onClick={() => setQuoteCat(cat as keyof typeof QUOTES)} style={{ background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.55rem', padding: '6px 18px', borderRadius: '4px' }}>{cat}</button>
@@ -127,9 +95,9 @@ function DiscoverySanctuary() {
                 </div>
               )}
 
-              {/* BACKGROUND SELECTION */}
+              {/* BACKGROUND SELECTION - Cleanly capped at 10 */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '8px' }}>
-                {[...Array(19)].map((_, i) => (
+                {[...Array(10)].map((_, i) => (
                   <button key={i} onClick={() => setBgIndex(i)} style={{ width: '24px', height: '22px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.5px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.5rem' }}>{i + 1}</button>
                 ))}
               </div>
@@ -139,12 +107,36 @@ function DiscoverySanctuary() {
           )}
         </div>
 
-        {/* 5. LOWER CONTROLS */}
+        {/* 5. FUNCTIONAL PLAYER & TO: INPUT */}
         <div style={{ position: 'absolute', bottom: '4vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div style={{ width: '180px', background: 'rgba(0,0,0,0.5)', padding: '12px', borderRadius: '10px', border: '0.5px solid #D4AF37', cursor: 'pointer' }}>
-             <p style={{ fontSize: '0.35rem', letterSpacing: '1px', opacity: 0.6 }}>GIFTED MELODY</p>
-             <div style={{ height: '22px', border: '0.5px solid #D4AF37', marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem' }}>PLAY</div>
+          
+          {/* FUNCTIONAL MUSIC PLAYER */}
+          <div style={{ width: '180px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+            <div 
+               onClick={() => setIsPlaying(!isPlaying)}
+               style={{ background: 'rgba(0,0,0,0.5)', padding: '12px', borderRadius: '10px', border: '0.5px solid #D4AF37', cursor: 'pointer' }}
+            >
+               <p style={{ fontSize: '0.35rem', letterSpacing: '1px', opacity: 0.6, marginBottom: '5px' }}>GIFTED MELODY</p>
+               <div style={{ height: '22px', border: '0.5px solid #D4AF37', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem' }}>
+                {isPlaying ? 'PAUSE' : 'PLAY'}
+               </div>
+            </div>
+            {!isReceiver && (
+              <input 
+                placeholder="YouTube ID (e.g. dQw4w9WgXcQ)"
+                value={youtubeId}
+                onChange={(e) => setYoutubeId(e.target.value)}
+                style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.4rem', borderBottom: '0.3px solid #D4AF37', outline: 'none', padding: '2px' }}
+              />
+            )}
           </div>
+
+          {/* HIDDEN YOUTUBE IFRAME (Controlled by isPlaying) */}
+          {isPlaying && (
+            <div style={{ display: 'none' }}>
+              <iframe width="1" height="1" src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`} allow="autoplay"></iframe>
+            </div>
+          )}
 
           {!isReceiver && (
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
