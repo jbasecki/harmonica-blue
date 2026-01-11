@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
-// 1. THIS INTERFACE DEFINITION RESOLVES THE "INTRINSIC ATTRIBUTES" ERROR
+// 1. THIS INTERFACE RESOLVES THE "INTRINSIC ATTRIBUTES" ERROR
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -13,13 +13,19 @@ interface SanctuaryProps {
   };
 }
 
-// 2. THE COMPONENT NOW USES THE INTERFACE ABOVE TO ACCEPT DATABASE DATA
+const QUOTES = {
+  Birthday: ["May your day be filled with light.", "Another year of wisdom.", "Cheers to the journey ahead."],
+  Bible: ["The Lord is my shepherd.", "Be strong and courageous.", "Love is patient, love is kind."],
+  Popular: ["Quiet the mind, the soul will speak.", "Collect moments, not things.", "The sun will rise and we will try again."]
+};
+
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
   const [text, setText] = useState(initialData?.text || 'Thank You!');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
   const [isReceiver] = useState(initialData?.isReceiver || false);
+  const [quoteCat, setQuoteCat] = useState<null | keyof typeof QUOTES>(null);
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -29,7 +35,6 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const traditionalCursive = "'Great Vibes', cursive"; 
 
-  // Database stash action
   const handleStashAndSend = async () => {
     const giftData = { toName, fromName, message: text, bgIndex, youtubeUrl };
     try {
@@ -75,11 +80,8 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
 
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
-      
-      {/* CINEMATIC BACKGROUND */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.2)' }} />
       </div>
 
       <div style={{ position: 'absolute', top: '5vh', left: '0', width: '100%', zIndex: 3, textAlign: 'center' }}>
@@ -87,8 +89,6 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        
-        {/* TILES & SIGNATURE (image_2386ee.jpg) */}
         <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
              {tiles.map((ltr, i) => (
@@ -102,11 +102,10 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           {isReceiver && <p style={{ fontSize: '0.5rem', opacity: 0.6, marginTop: '-5px' }}>from: {fromName}</p>}
         </div>
 
-        {/* GLASS VESSEL (image_22aa30.jpg) */}
         <div style={{ 
           marginTop: 'auto', marginBottom: '12vh', 
           width: '85%', maxWidth: '620px', minHeight: '340px',
-          background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)',
           borderRadius: '50px', padding: '40px 30px', border: '0.6px solid rgba(212, 175, 55, 0.25)',
           display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'
         }}>
@@ -137,11 +136,30 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           )}
         </div>
 
-        {/* FOOTER CONTROLS */}
         <div style={{ position: 'absolute', bottom: '4vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div style={{ display: 'flex', gap: '5px' }}>
                 <button onClick={() => { if(currentVideoId) setIsPlaying(!isPlaying); }} style={{ flex: 2, background: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '10px', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.6rem' }}>
                    {isPlaying ? '⏸ PAUSE' : '▶ PLAY'}
                 </button>
-                <button onClick={() => setIsExpanded(!isExpanded)} style={{ flex: 1, background: 'rgba(0,0,0,0.5)', borderRadius: '10px', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.4rem'
+                <button onClick={() => setIsExpanded(!isExpanded)} style={{ flex: 1, background: 'rgba(0,0,0,0.5)', borderRadius: '10px', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.4rem' }}>
+                   {isExpanded ? 'CLOSE' : 'VIDEO'}
+                </button>
+            </div>
+            {!isReceiver && (
+              <input placeholder="YouTube Link" value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.4rem', borderBottom: '0.3px solid #D4AF37', outline: 'none' }} />
+            )}
+          </div>
+          {!isReceiver && (
+            <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              <input value={fromName} onChange={(e) => setFromName(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right' }} />
+              <input value={toName} onChange={(e) => setToName(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right' }} />
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default function Home() { return <Suspense fallback={null}><DiscoverySanctuary /></Suspense> }
