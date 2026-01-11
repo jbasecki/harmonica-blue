@@ -75,8 +75,10 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
 
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
+      {/* CINEMATIC BACKGROUND */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.2)' }} />
       </div>
 
       <div style={{ position: 'absolute', top: '5vh', left: '0', width: '100%', zIndex: 3, textAlign: 'center' }}>
@@ -84,6 +86,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        {/* TILES & SIGNATURE (image_2386ee.jpg) */}
         <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
              {tiles.map((ltr, i) => (
@@ -97,6 +100,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           {isReceiver && <p style={{ fontSize: '0.5rem', opacity: 0.6, marginTop: '-5px' }}>from: {fromName}</p>}
         </div>
 
+        {/* GLASS VESSEL CONTAINER (image_2386ee.jpg) */}
         <div style={{ 
           marginTop: 'auto', marginBottom: '12vh', 
           width: '85%', maxWidth: '620px', minHeight: '340px',
@@ -117,3 +121,45 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
 
           {!isReceiver && !isExpanded && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px', width: '100%' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '6px' }}>
+                {[...Array(10)].map((_, i) => (
+                  <button key={i} onClick={() => setBgIndex(i)} style={{ width: '22px', height: '20px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.4px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.5rem' }}>{i + 1}</button>
+                ))}
+              </div>
+              <button onClick={handleStashAndSend} style={{ background: '#D4AF37', color: '#000', padding: '12px 60px', borderRadius: '30px', fontWeight: 'bold', fontSize: '0.7rem', border: 'none', cursor: 'pointer' }}>STASH & SEND</button>
+            </div>
+          )}
+
+          {isExpanded && (
+             <button onClick={() => { setIsExpanded(false); setIsPlaying(false); }} style={{ marginTop: '15px', background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.5rem', padding: '5px 20px', borderRadius: '20px' }}>RETURN TO MESSAGE</button>
+          )}
+        </div>
+
+        {/* FOOTER PLAYER CONTROLS (image_2386ee.jpg) */}
+        <div style={{ position: 'absolute', bottom: '4vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+          <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '5px' }}>
+                <button onClick={() => { if(currentVideoId) setIsPlaying(!isPlaying); }} style={{ flex: 2, background: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '10px', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.6rem' }}>
+                   {isPlaying ? '⏸ PAUSE' : '▶ PLAY'}
+                </button>
+                <button onClick={() => setIsExpanded(!isExpanded)} style={{ flex: 1, background: 'rgba(0,0,0,0.5)', borderRadius: '10px', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.4rem' }}>
+                   {isExpanded ? 'CLOSE' : 'VIDEO'}
+                </button>
+            </div>
+            {!isReceiver && (
+              <input placeholder="YouTube Link" value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.4rem', borderBottom: '0.3px solid #D4AF37', outline: 'none' }} />
+            )}
+          </div>
+          {!isReceiver && (
+            <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              <input value={fromName} onChange={(e) => setFromName(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right' }} />
+              <input value={toName} onChange={(e) => setToName(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right' }} />
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default function Home() { return <Suspense fallback={null}><DiscoverySanctuary /></Suspense> }
