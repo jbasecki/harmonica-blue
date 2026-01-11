@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect, useRef } from 'react';
 
 const BG_CREDITS = ["BBC: Savannah", "NatGeo: Ocean", "Discovery: Tundra", "BBC: Rainforest", "Alpine Peaks", "Desert Dunes", "Coral Reefs", "Redwoods", "Storm Clouds", "Serengeti"];
 
@@ -11,6 +11,7 @@ const QUOTES = {
 
 function DiscoverySanctuary() {
   const [toName, setToName] = useState('Mark');
+  const [fromName, setFromName] = useState('Krystyna'); // Added "From" state
   const [text, setText] = useState('Thank You!');
   const [bgIndex, setBgIndex] = useState(0);
   const [isReceiver, setIsReceiver] = useState(false);
@@ -19,11 +20,20 @@ function DiscoverySanctuary() {
   // PLAYER LOGIC
   const [isPlaying, setIsPlaying] = useState(false);
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const traditionalCursive = "'Great Vibes', cursive"; 
 
-  // Function to extract YouTube ID from various link formats
+  // Auto-mute background piano when YouTube starts
+  useEffect(() => {
+    if (isPlaying && audioRef.current) {
+      audioRef.current.pause();
+    } else if (!isPlaying && audioRef.current) {
+      audioRef.current.play();
+    }
+  }, [isPlaying]);
+
   const getYoutubeId = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url.match(regExp);
@@ -43,6 +53,9 @@ function DiscoverySanctuary() {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
+      {/* BACKGROUND PIANO (Optional MP3) */}
+      <audio ref={audioRef} loop src={`${bucketUrl}/piano-background.mp3`} />
+
       {/* 1. CINEMATIC BACKGROUND */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
@@ -62,15 +75,15 @@ function DiscoverySanctuary() {
       {/* 3. CENTER COLUMN ENGINE */}
       <div style={{ position: 'relative', zIndex: 2, height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* SIGNATURE: Tiles centered, [I] moved to Name line */}
+        {/* SIGNATURE AREA: Tiles & Old Fashion Cursive Name */}
         <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-          <div style={{ display: 'flex', gap: '15px' }}>
+          <div style={{ display: 'flex', gap: '15px', marginBottom: '4px' }}>
              {tiles.map((ltr, i) => (
                <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '65px', border: '0.5px solid #D4AF37', borderRadius: '4px' }} alt="Art" />
              ))}
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ fontFamily: traditionalCursive, fontSize: '1.4rem', color: '#D4AF37', letterSpacing: '1px' }}>
+            <div style={{ fontFamily: traditionalCursive, fontSize: '1.6rem', color: '#D4AF37', letterSpacing: '1px' }}>
               {toName}
             </div>
             <div 
@@ -78,6 +91,9 @@ function DiscoverySanctuary() {
                style={{ width: '16px', height: '16px', border: '0.6px solid #D4AF37', borderRadius: '50%', fontSize: '0.45rem', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'help', opacity: 0.5 }}
              >I</div>
           </div>
+          {isReceiver && fromName && (
+             <p style={{ fontSize: '0.5rem', opacity: 0.6, letterSpacing: '2px', marginTop: '-5px' }}>from: {fromName}</p>
+          )}
         </div>
 
         {/* 4. THE GLASS VESSEL */}
@@ -124,10 +140,11 @@ function DiscoverySanctuary() {
           <div style={{ width: '180px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div 
                onClick={() => { if(currentVideoId) setIsPlaying(!isPlaying); }}
-               style={{ background: 'rgba(0,0,0,0.5)', padding: '12px', borderRadius: '10px', border: '0.5px solid #D4AF37', cursor: 'pointer' }}
+               style={{ background: 'rgba(0,0,0,0.5)', padding: '12px', borderRadius: '10px', border: '0.5px solid #D4AF37', cursor: 'pointer', textAlign: 'center' }}
             >
                <p style={{ fontSize: '0.35rem', letterSpacing: '1px', opacity: 0.6, marginBottom: '5px' }}>GIFTED MELODY</p>
-               <div style={{ height: '22px', border: '0.5px solid #D4AF37', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem' }}>
+               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '0.6rem' }}>
+                <span style={{ fontSize: '0.8rem' }}>{isPlaying ? '⏸' : '▶'}</span>
                 {isPlaying ? 'PAUSE' : 'PLAY'}
                </div>
             </div>
@@ -153,9 +170,15 @@ function DiscoverySanctuary() {
           )}
 
           {!isReceiver && (
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <p style={{ fontSize: '0.5rem', opacity: 0.4 }}>TO:</p>
-              <input value={toName} onChange={(e) => setToName(e.target.value)} style={{ width: '80px', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right', outline: 'none' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                <p style={{ fontSize: '0.45rem', opacity: 0.4 }}>FROM:</p>
+                <input value={fromName} onChange={(e) => setFromName(e.target.value)} style={{ width: '80px', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right', outline: 'none' }} />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                <p style={{ fontSize: '0.45rem', opacity: 0.4 }}>TO:</p>
+                <input value={toName} onChange={(e) => setToName(e.target.value)} style={{ width: '80px', background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right', outline: 'none' }} />
+              </div>
             </div>
           )}
         </div>
