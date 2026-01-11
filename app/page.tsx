@@ -9,7 +9,7 @@ const QUOTES = {
   Popular: ["Quiet the mind, the soul will speak.", "Collect moments, not things.", "The sun will rise and we will try again."]
 };
 
-// 1. THIS INTERFACE DEFINITION SOLVES THE 'INTRINSIC ATTRIBUTES' ERROR
+// 1. THIS INTERFACE DEFINITION IS WHAT FIXES THE "INITIALDATA" TYPE ERROR
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -21,7 +21,7 @@ interface SanctuaryProps {
   };
 }
 
-// 2. THE COMPONENT NOW ACCEPTS THE PROPS DEFINED ABOVE
+// 2. THE COMPONENT NOW USES THE INTERFACE ABOVE TO ACCEPT DATABASE DATA
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
@@ -84,19 +84,20 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* BACKGROUND VIDEO */}
+      {/* CINEMATIC BACKGROUND */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.2)' }} />
       </div>
 
+      {/* HEADER */}
       <div style={{ position: 'absolute', top: '5vh', left: '0', width: '100%', zIndex: 3, textAlign: 'center' }}>
         <h1 style={{ fontSize: '1.4rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* TILES & SIGNATURE (Centered as per image_22aa30.jpg) */}
+        {/* TILES & SIGNATURE (Centered as per image_2386ee.jpg) */}
         <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
              {tiles.map((ltr, i) => (
@@ -177,5 +178,5 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   );
 }
 
-// 3. FINAL EXPORT
+// 3. FINAL EXPORT WITH SUSPENSE FOR VERCEL STABILITY
 export default function Home() { return <Suspense fallback={null}><DiscoverySanctuary /></Suspense> }
