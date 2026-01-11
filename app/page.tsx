@@ -34,12 +34,12 @@ function DiscoverySanctuary() {
       {/* 1. CINEMATIC BACKGROUND */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.65 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.3))' }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.4))' }} />
       </div>
 
       {/* 2. HEADER BRANDING */}
       <div style={{ position: 'absolute', top: '4vh', left: '0', width: '100%', zIndex: 3, textAlign: 'center' }}>
-        <h1 style={{ fontSize: '1rem', letterSpacing: '14px', margin: 0, fontWeight: 'lighter', opacity: 0.7 }}>HARMONICA</h1>
+        <h1 style={{ fontSize: '0.9rem', letterSpacing: '16px', margin: 0, fontWeight: 'lighter', opacity: 0.6 }}>HARMONICA</h1>
       </div>
       
       <div onClick={() => setIsReceiver(!isReceiver)} style={{ position: 'absolute', top: '4vh', right: '6vw', zIndex: 10, cursor: 'pointer', textAlign: 'right' }}>
@@ -47,38 +47,38 @@ function DiscoverySanctuary() {
         <p style={{ fontSize: '0.3rem', fontStyle: 'italic', opacity: 0.3 }}>Visual by {BG_CREDITS[bgIndex]}</p>
       </div>
 
-      {/* 3. VERTICAL LAYOUT ENGINE */}
+      {/* 3. CENTER COLUMN - REPOSITIONED LAYOUT */}
       <div style={{ position: 'relative', zIndex: 2, height: '100%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* TILES & NAME - HIGH ON PAGE */}
-        <div style={{ marginTop: '14vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-          <div style={{ display: 'flex', gap: '8px' }}>
+        {/* TILES & NAME - REMAIN AT TOP */}
+        <div style={{ marginTop: '13vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+          <div style={{ display: 'flex', gap: '12px' }}>
              {tiles.map((ltr, i) => (
-               <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '35px', border: '0.4px solid #D4AF37', borderRadius: '3px' }} alt="Art" />
+               <img key={i} src={`${bucketUrl}/${ltr}5.png`} 
+                style={{ width: '50px', border: '0.4px solid #D4AF37', borderRadius: '4px' }} alt="Art" /> 
              ))}
           </div>
-          <div style={{ fontFamily: classicScript, fontSize: '1.8rem', color: '#D4AF37', letterSpacing: '2px' }}>
+          <div style={{ fontFamily: classicScript, fontSize: '1.6rem', color: '#D4AF37', letterSpacing: '1px' }}>
             {toName}
           </div>
         </div>
 
-        {/* FROSTED OVERLAY - PULLED DOWN TO CENTER-LOWER */}
+        {/* FROSTED CENTER - PULLED DOWN FURTHER */}
         <div style={{ 
-          marginTop: '6vh', // Creates the downward pull
+          marginTop: '8vh', // Pulls the center piece down from the name
           width: '85%', 
-          maxWidth: '580px', 
-          background: 'rgba(255, 255, 255, 0.06)', 
-          backdropFilter: 'blur(15px)',
-          WebkitBackdropFilter: 'blur(15px)',
-          borderRadius: '40px', // More rounded "pill" look
-          padding: '30px',
-          border: '0.5px solid rgba(212, 175, 55, 0.2)',
+          maxWidth: '560px', 
+          background: 'rgba(255, 255, 255, 0.05)', 
+          backdropFilter: 'blur(18px)',
+          WebkitBackdropFilter: 'blur(18px)',
+          borderRadius: '45px', // Pill-like rounded corners
+          padding: '30px 40px',
+          border: '0.5px solid rgba(212, 175, 55, 0.15)',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.2)'
+          alignItems: 'center'
         }}>
-          {/* GREETING TEXT - REDUCED SIZE FOR ELEGANCE */}
+          {/* GREETING TEXT - SMALLER FOR CLASSIC LOOK */}
           <textarea 
             disabled={isReceiver}
             value={text} 
@@ -89,22 +89,22 @@ function DiscoverySanctuary() {
               background: 'transparent', 
               border: 'none', 
               textAlign: 'center', 
-              fontSize: '1.4rem', // Significantly smaller for "Sanctuary" feel
+              fontSize: '1.2rem', // Reduced for elegance
               fontFamily: classicScript, 
               color: '#D4AF37', 
               outline: 'none', 
               resize: 'none',
-              lineHeight: '1.4'
+              lineHeight: '1.5'
             }} 
           />
 
           {!isReceiver && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px', width: '100%' }}>
-              <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', width: '100%', marginTop: '5px' }}>
+              <div style={{ display: 'flex', gap: '12px' }}>
                  {Object.keys(QUOTES).map((cat) => (
-                   <button key={cat} onClick={() => setQuoteCat(cat as keyof typeof QUOTES)} style={{ background: 'none', border: '0.3px solid #D4AF37', color: '#D4AF37', fontSize: '0.45rem', padding: '4px 10px', borderRadius: '4px' }}>{cat}</button>
+                   <button key={cat} onClick={() => setQuoteCat(cat as keyof typeof QUOTES)} style={{ background: 'none', border: '0.3px solid #D4AF37', color: '#D4AF37', fontSize: '0.45rem', padding: '4px 12px', borderRadius: '4px' }}>{cat}</button>
                  ))}
-                 <button onClick={() => setText('')} style={{ background: 'none', border: '0.3px solid #666', color: '#D4AF37', fontSize: '0.45rem', padding: '4px 10px', borderRadius: '4px' }}>Skip</button>
+                 <button onClick={() => setText('')} style={{ background: 'none', border: '0.3px solid #444', color: '#D4AF37', fontSize: '0.45rem', padding: '4px 12px', borderRadius: '4px' }}>Skip</button>
               </div>
 
               {quoteCat && (
@@ -115,20 +115,20 @@ function DiscoverySanctuary() {
                 </div>
               )}
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '5px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '6px' }}>
                 {[...Array(19)].map((_, i) => (
-                  <button key={i} onClick={() => setBgIndex(i)} style={{ width: '20px', height: '18px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.3px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.45rem' }}>{i + 1}</button>
+                  <button key={i} onClick={() => setBgIndex(i)} style={{ width: '20px', height: '18px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.3px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.4rem' }}>{i + 1}</button>
                 ))}
               </div>
 
-              <button style={{ background: '#D4AF37', color: '#000', padding: '10px 45px', borderRadius: '25px', fontWeight: 'bold', fontSize: '0.7rem', border: 'none', cursor: 'pointer', letterSpacing: '1px' }}>STASH & SEND</button>
+              <button style={{ background: '#D4AF37', color: '#000', padding: '10px 50px', borderRadius: '25px', fontWeight: 'bold', fontSize: '0.65rem', border: 'none', cursor: 'pointer', letterSpacing: '1px' }}>STASH & SEND</button>
             </div>
           )}
         </div>
 
         {/* 4. FOOTER CONTROLS */}
         <div style={{ position: 'absolute', bottom: '6vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div style={{ width: '180px', background: 'rgba(0,0,0,0.4)', padding: '10px', borderRadius: '8px', border: '0.5px solid #D4AF37', cursor: 'pointer' }}>
+          <div style={{ width: '180px', background: 'rgba(0,0,0,0.4)', padding: '10px', borderRadius: '10px', border: '0.5px solid #D4AF37', cursor: 'pointer' }}>
              <p style={{ fontSize: '0.35rem', letterSpacing: '1px', opacity: 0.5 }}>GIFTED MELODY</p>
              <div style={{ height: '22px', border: '0.5px solid #D4AF37', marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.55rem' }}>PLAY</div>
           </div>
