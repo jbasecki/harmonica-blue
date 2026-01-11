@@ -9,6 +9,7 @@ const QUOTES = {
   Popular: ["Quiet the mind, the soul will speak.", "Collect moments, not things.", "The sun will rise and we will try again."]
 };
 
+// THIS INTERFACE IS THE KEY FIX FOR YOUR ERROR
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -21,6 +22,7 @@ interface SanctuaryProps {
 }
 
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
+  // Use stashed data from DB if it exists, otherwise use defaults
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
   const [text, setText] = useState(initialData?.text || 'Thank You!');
@@ -88,14 +90,12 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.2)' }} />
       </div>
 
-      {/* HEADER */}
       <div style={{ position: 'absolute', top: '5vh', left: '0', width: '100%', zIndex: 3, textAlign: 'center' }}>
         <h1 style={{ fontSize: '1.4rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* TILES & SIGNATURE */}
         <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
              {tiles.map((ltr, i) => (
@@ -109,7 +109,6 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           {isReceiver && <p style={{ fontSize: '0.5rem', opacity: 0.6, marginTop: '-5px' }}>from: {fromName}</p>}
         </div>
 
-        {/* GLASS VESSEL */}
         <div style={{ 
           marginTop: 'auto', marginBottom: '12vh', 
           width: '85%', maxWidth: '620px', minHeight: '340px',
@@ -149,7 +148,6 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           )}
         </div>
 
-        {/* FOOTER */}
         <div style={{ position: 'absolute', bottom: '4vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div style={{ display: 'flex', gap: '5px' }}>
