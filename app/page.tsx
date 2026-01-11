@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
-// 1. THIS INTERFACE MUST MATCH THE DATA COMING FROM YOUR DATABASE
+// 1. THIS INTERFACE DEFINITION IS THE FIX FOR "INTRINSIC ATTRIBUTES"
+// It explicitly tells the computer that 'initialData' is allowed.
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -14,7 +15,7 @@ interface SanctuaryProps {
 }
 
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
-  // Use database data if present (for receivers), otherwise use defaults (for creators)
+  // We check if database data exists; if not, we use your default names.
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
   const [text, setText] = useState(initialData?.text || 'Thank You!');
@@ -29,7 +30,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const traditionalCursive = "'Great Vibes', cursive"; 
 
-  // Handlers for the database "Stash" action
+  // Function to save the current design to your Vercel database.
   const handleStashAndSend = async () => {
     const giftData = { toName, fromName, message: text, bgIndex, youtubeUrl };
     try {
@@ -76,7 +77,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* BACKGROUND VIDEO */}
+      {/* CINEMATIC BACKGROUND */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.2)' }} />
@@ -88,7 +89,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* TILES & SIGNATURE */}
+        {/* TILES & SIGNATURE (image_2386ee.jpg) */}
         <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
              {tiles.map((ltr, i) => (
@@ -102,7 +103,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           {isReceiver && <p style={{ fontSize: '0.5rem', opacity: 0.6, marginTop: '-5px' }}>from: {fromName}</p>}
         </div>
 
-        {/* MESSAGE VESSEL */}
+        {/* GLASS VESSEL CONTAINER */}
         <div style={{ 
           marginTop: 'auto', marginBottom: '12vh', 
           width: '85%', maxWidth: '620px', minHeight: '340px',
@@ -137,7 +138,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           )}
         </div>
 
-        {/* CONTROLS */}
+        {/* PLAYER CONTROLS */}
         <div style={{ position: 'absolute', bottom: '4vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div style={{ display: 'flex', gap: '5px' }}>
