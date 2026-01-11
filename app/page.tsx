@@ -9,7 +9,6 @@ const QUOTES = {
   Popular: ["Quiet the mind, the soul will speak.", "Collect moments, not things.", "The sun will rise and we will try again."]
 };
 
-// 1. THIS INTERFACE FIXES THE VERCEL BUILD ERROR
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -22,7 +21,6 @@ interface SanctuaryProps {
 }
 
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
-  // 2. STATE - Uses stashed data if present, or defaults for creator
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
   const [text, setText] = useState(initialData?.text || 'Thank You!');
@@ -38,7 +36,6 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const traditionalCursive = "'Great Vibes', cursive"; 
 
-  // 3. MEDIA SYNC
   useEffect(() => {
     if (isExpanded && isPlaying) {
       videoRef.current?.pause();
@@ -64,7 +61,6 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
 
   const tiles = getReceiverArt(toName);
 
-  // 4. STASH ACTION
   const handleStashAndSend = async () => {
     const giftData = { toName, fromName, message: text, bgIndex, youtubeUrl };
     try {
@@ -97,10 +93,9 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
         <h1 style={{ fontSize: '1.4rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
       </div>
 
-      {/* CENTER ENGINE */}
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* TILES & CURSIVE SIGNATURE */}
+        {/* TILES & SIGNATURE */}
         <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
              {tiles.map((ltr, i) => (
@@ -136,4 +131,26 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           {!isReceiver && !isExpanded && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px', width: '100%' }}>
               <div style={{ display: 'flex', gap: '10px' }}>
-                 {Object.
+                 {Object.keys(QUOTES).map((cat) => (
+                   <button key={cat} onClick={() => setQuoteCat(cat as keyof typeof QUOTES)} style={{ background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.5rem', padding: '5px 15px', borderRadius: '4px' }}>{cat}</button>
+                 ))}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '6px' }}>
+                {[...Array(10)].map((_, i) => (
+                  <button key={i} onClick={() => setBgIndex(i)} style={{ width: '22px', height: '20px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.4px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.5rem' }}>{i + 1}</button>
+                ))}
+              </div>
+              <button onClick={handleStashAndSend} style={{ background: '#D4AF37', color: '#000', padding: '12px 60px', borderRadius: '30px', fontWeight: 'bold', fontSize: '0.7rem', border: 'none', cursor: 'pointer' }}>STASH & SEND</button>
+            </div>
+          )}
+
+          {isExpanded && (
+             <button onClick={() => { setIsExpanded(false); setIsPlaying(false); }} style={{ marginTop: '15px', background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.5rem', padding: '5px 20px', borderRadius: '20px' }}>RETURN TO MESSAGE</button>
+          )}
+        </div>
+
+        {/* FOOTER */}
+        <div style={{ position: 'absolute', bottom: '4vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+          <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '5px' }}>
+                <button onClick={() => { if(currentVideoId) setIs
