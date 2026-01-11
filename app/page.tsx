@@ -9,7 +9,7 @@ const QUOTES = {
   Popular: ["Quiet the mind, the soul will speak.", "Collect moments, not things.", "The sun will rise and we will try again."]
 };
 
-// 1. THIS INTERFACE DEFINITION IS THE KEY TO FIXING THE TYPE ERROR
+// 1. THIS INTERFACE DEFINITION IS THE CRITICAL FIX FOR THE TYPE ERROR
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -21,7 +21,7 @@ interface SanctuaryProps {
   };
 }
 
-// 2. WE UPDATE THE COMPONENT TO RECEIVE THESE PROPS
+// 2. THE COMPONENT MUST USE THE INTERFACE ABOVE
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
@@ -177,4 +177,5 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   );
 }
 
+// 3. EXPORT WITH SUSPENSE FOR STABILITY
 export default function Home() { return <Suspense fallback={null}><DiscoverySanctuary /></Suspense> }
