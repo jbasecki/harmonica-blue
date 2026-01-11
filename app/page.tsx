@@ -2,7 +2,7 @@
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
 // 1. THIS INTERFACE DEFINITION IS THE FIX FOR "INTRINSIC ATTRIBUTES"
-// It explicitly tells the computer that 'initialData' is allowed.
+// It tells the computer that 'initialData' is officially allowed.
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -30,7 +30,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const traditionalCursive = "'Great Vibes', cursive"; 
 
-  // Function to save the current design to your Vercel database.
+  // Saves the current design to your Vercel database.
   const handleStashAndSend = async () => {
     const giftData = { toName, fromName, message: text, bgIndex, youtubeUrl };
     try {
@@ -89,7 +89,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* TILES & SIGNATURE (image_2386ee.jpg) */}
+        {/* TILES & SIGNATURE */}
         <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
              {tiles.map((ltr, i) => (
