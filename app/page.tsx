@@ -1,8 +1,7 @@
 'use client';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
-// 1. THIS INTERFACE DEFINITION RESOLVES THE "INTRINSIC ATTRIBUTES" ERROR
-// It tells the computer that 'initialData' is an expected custom attribute.
+// This "Interface" defines the pocket for your database data
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -13,6 +12,10 @@ interface SanctuaryProps {
     isReceiver: boolean;
   };
 }
+
+// Then apply it to your component like this:
+function DiscoverySanctuary({ initialData }: SanctuaryProps) {
+  // ... rest of your code
 
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   // Use database data if it exists, otherwise use defaults for the creator
