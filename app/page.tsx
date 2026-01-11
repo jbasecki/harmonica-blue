@@ -106,4 +106,49 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
             <div style={{ fontFamily: traditionalCursive, fontSize: '1.6rem' }}>{toName}</div>
             <div title="Name translated to tiles." style={{ width: '16px', height: '16px', border: '0.6px solid #D4AF37', borderRadius: '50%', fontSize: '0.45rem', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'help', opacity: 0.5 }}>I</div>
           </div>
-          {isReceiver && <p style={{ fontSize: '0.5rem', opacity: 0.6, marginTop: '-5px' }}>from: {fromName}</p
+          {isReceiver && <p style={{ fontSize: '0.5rem', opacity: 0.6, marginTop: '-5px' }}>from: {fromName}</p>}
+        </div>
+
+        {/* GLASS VESSEL */}
+        <div style={{ 
+          marginTop: 'auto', marginBottom: '12vh', 
+          width: '85%', maxWidth: '620px', minHeight: '340px',
+          background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          borderRadius: '50px', padding: '40px 30px', border: '0.6px solid rgba(212, 175, 55, 0.25)',
+          display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'
+        }}>
+          {isExpanded && currentVideoId ? (
+            <div style={{ width: '100%', borderRadius: '20px', overflow: 'hidden', aspectRatio: '16/9', border: '0.5px solid #D4AF37' }}>
+               <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${currentVideoId}?autoplay=1`} allow="autoplay" frameBorder="0"></iframe>
+            </div>
+          ) : (
+            <textarea 
+              disabled={isReceiver} value={text} onChange={(e) => setText(e.target.value)}
+              style={{ width: '100%', height: '60px', background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.2rem', fontFamily: traditionalCursive, color: '#D4AF37', outline: 'none', resize: 'none' }} 
+            />
+          )}
+
+          {!isReceiver && !isExpanded && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '18px', width: '100%' }}>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                 {Object.keys(QUOTES).map((cat) => (
+                   <button key={cat} onClick={() => setQuoteCat(cat as keyof typeof QUOTES)} style={{ background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.5rem', padding: '5px 15px', borderRadius: '4px' }}>{cat}</button>
+                 ))}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(10, 1fr)', gap: '6px' }}>
+                {[...Array(10)].map((_, i) => (
+                  <button key={i} onClick={() => setBgIndex(i)} style={{ width: '22px', height: '20px', background: bgIndex === i ? '#D4AF37' : 'none', border: '0.4px solid #D4AF37', color: bgIndex === i ? '#000' : '#D4AF37', fontSize: '0.5rem' }}>{i + 1}</button>
+                ))}
+              </div>
+              <button onClick={handleStashAndSend} style={{ background: '#D4AF37', color: '#000', padding: '12px 60px', borderRadius: '30px', fontWeight: 'bold', fontSize: '0.7rem', border: 'none', cursor: 'pointer' }}>STASH & SEND</button>
+            </div>
+          )}
+
+          {isExpanded && (
+             <button onClick={() => { setIsExpanded(false); setIsPlaying(false); }} style={{ marginTop: '15px', background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.5rem', padding: '5px 20px', borderRadius: '20px' }}>RETURN TO MESSAGE</button>
+          )}
+        </div>
+
+        {/* FOOTER */}
+        <div style={{ position: 'absolute', bottom: '4vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+          <div style={{ width: '200px', display: 'flex', flexDirection: 'column',
