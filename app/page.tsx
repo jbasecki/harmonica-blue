@@ -151,4 +151,29 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
 
         {/* FOOTER */}
         <div style={{ position: 'absolute', bottom: '4vh', left: '6vw', right: '6vw', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-          <div style={{ width: '200px', display: 'flex', flexDirection: 'column',
+          <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '5px' }}>
+                <button onClick={() => { if(currentVideoId) setIsPlaying(!isPlaying); }} style={{ flex: 2, background: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '10px', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.6rem' }}>
+                   {isPlaying ? '⏸ PAUSE' : '▶ PLAY'}
+                </button>
+                <button onClick={() => setIsExpanded(!isExpanded)} style={{ flex: 1, background: 'rgba(0,0,0,0.5)', borderRadius: '10px', border: '0.5px solid #D4AF37', color: '#D4AF37', fontSize: '0.4rem' }}>
+                   {isExpanded ? 'CLOSE' : 'VIDEO'}
+                </button>
+            </div>
+            {!isReceiver && (
+              <input placeholder="YouTube Link" value={youtubeUrl} onChange={(e) => setYoutubeUrl(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.4rem', borderBottom: '0.3px solid #D4AF37', outline: 'none' }} />
+            )}
+          </div>
+          {!isReceiver && (
+            <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              <input value={fromName} onChange={(e) => setFromName(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right' }} />
+              <input value={toName} onChange={(e) => setToName(e.target.value)} style={{ background: 'transparent', border: 'none', color: '#D4AF37', fontSize: '0.8rem', textAlign: 'right' }} />
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+export default function Home() { return <Suspense fallback={null}><DiscoverySanctuary /></Suspense> }
