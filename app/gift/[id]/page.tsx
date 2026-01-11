@@ -1,24 +1,26 @@
 import { db } from '@vercel/postgres';
-import DiscoverySanctuary from '../../components/DiscoverySanctuary';
+// If your main file is just called 'page.tsx' in the 'app' folder, use this path:
+import DiscoverySanctuary from '../../page'; 
 
 export default async function GiftPage({ params }: { params: { id: string } }) {
   const client = await db.connect();
   
-  // 1. Fetch the stashed gift data using the ID from the URL
+  // Fetch stashed data
   const { rows } = await client.sql`
     SELECT * FROM gifts WHERE id = ${params.id};
   `;
 
-  // 2. Handle if the link is broken or doesn't exist
-  if (!rows[0]) {
-    return <div style={{ color: '#D4AF37', textAlign: 'center', marginTop: '20vh', fontFamily: 'serif' }}>
-      This sanctuary has not been found.
-    </div>;
+  if (!rows || rows.length === 0) {
+    return (
+      <div style={{ color: '#D4AF37', textAlign: 'center', marginTop: '30vh', background: '#000', height: '100vh' }}>
+        <h1 style={{ letterSpacing: '10px' }}>HARMONICA</h1>
+        <p style={{ fontStyle: 'italic', opacity: 0.6 }}>This sanctuary has not been found.</p>
+      </div>
+    );
   }
 
   const gift = rows[0];
 
-  // 3. Render the sanctuary with the receiver view locked
   return (
     <DiscoverySanctuary 
       initialData={{
@@ -27,7 +29,7 @@ export default async function GiftPage({ params }: { params: { id: string } }) {
         text: gift.message,
         bgIndex: gift.bg_index,
         youtubeUrl: gift.yt_url,
-        isReceiver: true // This ensures they see the clean version
+        isReceiver: true 
       }}
     />
   );
