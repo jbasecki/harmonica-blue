@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
-// 1. THIS INTERFACE RESOLVES THE "INTRINSIC ATTRIBUTES" ERROR
+// 1. THIS INTERFACE DEFINITION SOLVES THE "INTRINSIC ATTRIBUTES" ERROR
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -13,19 +13,13 @@ interface SanctuaryProps {
   };
 }
 
-const QUOTES = {
-  Birthday: ["May your day be filled with light.", "Another year of wisdom.", "Cheers to the journey ahead."],
-  Bible: ["The Lord is my shepherd.", "Be strong and courageous.", "Love is patient, love is kind."],
-  Popular: ["Quiet the mind, the soul will speak.", "Collect moments, not things.", "The sun will rise and we will try again."]
-};
-
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
+  // Use stashed data if present, otherwise use defaults
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
   const [text, setText] = useState(initialData?.text || 'Thank You!');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
   const [isReceiver] = useState(initialData?.isReceiver || false);
-  const [quoteCat, setQuoteCat] = useState<null | keyof typeof QUOTES>(null);
   
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -105,7 +99,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
         <div style={{ 
           marginTop: 'auto', marginBottom: '12vh', 
           width: '85%', maxWidth: '620px', minHeight: '340px',
-          background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)',
+          background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
           borderRadius: '50px', padding: '40px 30px', border: '0.6px solid rgba(212, 175, 55, 0.25)',
           display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'
         }}>
