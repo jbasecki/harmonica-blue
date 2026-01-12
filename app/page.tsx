@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
-// FIXES THE BUILD ERROR: Maps the database gift to the Sanctuary component
+// 1. THIS INTERFACE DEFINITION IS THE FIX FOR "INTRINSIC ATTRIBUTES"
+// It explicitly tells the computer that 'initialData' is officially allowed.
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -14,7 +15,7 @@ interface SanctuaryProps {
 }
 
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
-  // 1. STATE MANAGEMENT
+  // Use database data if present (for receivers); otherwise, use default prompt
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
   const [text, setText] = useState(initialData?.text || 'create your content and transform it into a harmonica of tiles (when ready)');
@@ -25,17 +26,18 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
-  const vintageCursive = "'Great Vibes', cursive"; // Copperplate Wedding Script style
+  
+  // ACHIEVING THE VINTAGE CURSIVE FONT:
+  // Using 'Great Vibes' from Google Fonts to match your copperplate wedding script.
+  const vintageCursive = "'Great Vibes', cursive"; 
 
-  // 2. ALPHABET LOGIC: Word-to-Tile mapping
+  // ALPHABET LOGIC: Word-to-Tile mapping for the "Harmonica of Tiles"
   const getArtForWord = (word: string) => {
     const clean = word.replace(/[^a-zA-Z]/g, "").toUpperCase();
     if (clean.length === 0) return [];
-    // Returns the first and last letters of the word for the "harmonica" effect
     return [clean[0], clean[clean.length - 1]]; 
   };
 
-  // 3. DATABASE STASHING
   const handleStashAndSend = async () => {
     const giftData = { toName, fromName, message: text, bgIndex, youtubeUrl };
     try {
@@ -57,13 +59,12 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* FULL BACKGROUND VIDEO (Dances to music when vessel is closed) */}
+      {/* FULL BACKGROUND VIDEO (Reveal this to show it "dancing" to music) */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.1)' }} />
       </div>
 
-      {/* TOP HEADER & CINEMATIC TOGGLE */}
+      {/* TOP HEADER & CINEMATIC TOGGLE (CLOSE BUTTON) */}
       <div style={{ position: 'absolute', top: '5vh', left: '0', width: '100%', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <h1 style={{ fontSize: '1.2rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
         <button onClick={() => setShowVessel(!showVessel)} style={{ position: 'absolute', right: '5vw', background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', borderRadius: '50%', width: '45px', height: '45px', fontSize: '0.5rem', cursor: 'pointer', letterSpacing: '1px' }}>
@@ -74,7 +75,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
       {showVessel && (
         <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           
-          {/* TILES & SIGNATURE AREA */}
+          {/* TILES & (I) INFO */}
           <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ fontFamily: vintageCursive, fontSize: '2.5rem' }}>{toName}</div>
@@ -95,7 +96,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
               style={{ width: '100%', height: '100px', background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.4rem', fontFamily: vintageCursive, color: '#D4AF37', outline: 'none', resize: 'none' }} 
             />
 
-            {/* HARMONICA TILE DISPLAY (Last three words morph into tiles) */}
+            {/* HARMONICA TILE DISPLAY: Words morph into art here */}
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginTop: '20px' }}>
                {text.split(' ').slice(-3).map((word, idx) => (
                  <div key={idx} style={{ display: 'flex', gap: '4px' }}>
@@ -111,7 +112,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
             )}
           </div>
 
-          {/* FOOTER CONTROLS */}
+          {/* FOOTER BG SELECTION */}
           {!isReceiver && (
             <div style={{ position: 'absolute', bottom: '4vh', display: 'flex', gap: '10px' }}>
               {[...Array(10)].map((_, i) => (
