@@ -1,8 +1,7 @@
 'use client';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
-// 1. THE "MAIL SLOT": This officially registers the database gift package.
-// Without this, Vercel will continue to show the "IntrinsicAttributes" error.
+// 1. THIS IS THE "MAIL SLOT": This registers the database gift so the build passes.
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -15,12 +14,12 @@ interface SanctuaryProps {
 }
 
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
-  // Use database data if present; otherwise, use the new interactive prompt.
+  // Use database data if it exists; otherwise, use your new interactive prompt.
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [text, setText] = useState(initialData?.text || 'create your content and transform it into a harmonica of tiles (when ready)');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
   const [isReceiver] = useState(initialData?.isReceiver || false);
-  const [showVessel, setShowVessel] = useState(true); // Toggle for Cinematic Mode
+  const [showVessel, setShowVessel] = useState(true); // Cinematic Toggle
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
@@ -32,14 +31,14 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const getArtForWord = (word: string) => {
     const clean = word.replace(/[^a-zA-Z]/g, "").toUpperCase();
     if (clean.length === 0) return [];
-    // Returns first and last letter for the visual "harmonica" effect.
+    // Returns first and last letter for the visual "harmonica" bookend effect.
     return [clean[0], clean[clean.length - 1]]; 
   };
 
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* THE DANCING VIDEO: Full-screen nature background revealed by CLOSE button. */}
+      {/* BACKGROUND VIDEO: Revealed in full when CLOSE is clicked. */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
       </div>
@@ -55,7 +54,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
       {showVessel && (
         <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           
-          {/* VISUAL NAME & (I) INFO TOOLTIP */}
+          {/* INTERACTIVE NAME & (I) INFO */}
           <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ fontFamily: vintageCursive, fontSize: '2.5rem' }}>{toName}</div>
@@ -76,7 +75,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
               style={{ width: '100%', height: '120px', background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.4rem', fontFamily: vintageCursive, color: '#D4AF37', outline: 'none', resize: 'none' }} 
             />
 
-            {/* HARMONICA DISPLAY: Visual transformation of the message into art tiles. */}
+            {/* HARMONICA DISPLAY: Visual transformation of text into art tiles. */}
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
                {text.split(' ').slice(-3).map((word, idx) => (
                  <div key={idx} style={{ display: 'flex', gap: '4px' }}>
