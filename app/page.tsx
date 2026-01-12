@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
-// 1. THE "MAIL SLOT": This officially registers your database gift
+// 1. THE "MAIL SLOT": This officially registers your database package
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -18,15 +18,13 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const [text, setText] = useState(initialData?.text || 'create your content and transform it into a harmonica of tiles (when ready)');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
   const [isReceiver] = useState(initialData?.isReceiver || false);
-  const [showVessel, setShowVessel] = useState(true); // Cinematic Mode Toggle
+  const [showVessel, setShowVessel] = useState(true); 
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
-  
-  // VINTAGE FONT: Using 'Great Vibes' to match your copperplate script screenshot
-  const elegantScript = "'Great Vibes', cursive"; 
+  const elegantScript = "'Great Vibes', cursive"; // Matches your vintage wedding script
 
-  // HARMONICA TILE ENGINE: Words morph into art tiles
+  // THE HARMONICA ENGINE: Transforms words into art tiles
   const getArtForWord = (word: string) => {
     const clean = word.replace(/[^a-zA-Z]/g, "").toUpperCase();
     if (clean.length === 0) return [];
@@ -36,14 +34,14 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* CINEMATIC BACKGROUND VIDEO */}
+      {/* FULL BACKGROUND VIDEO */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
       </div>
 
-      {/* HEADER & TOGGLE */}
+      {/* TOP HEADER & CINEMATIC TOGGLE */}
       <div style={{ position: 'absolute', top: '5vh', left: '0', width: '100%', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <h1 style={{ fontSize: '1.2rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
+        <h1 style={{ fontSize: '1.2rem', letterSpacing: '18px', margin: 0 }}>HARMONICA</h1>
         <button onClick={() => setShowVessel(!showVessel)} style={{ position: 'absolute', right: '5vw', background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', borderRadius: '50%', width: '45px', height: '45px', fontSize: '0.5rem', cursor: 'pointer' }}>
           {showVessel ? 'CLOSE' : 'OPEN'}
         </button>
@@ -51,6 +49,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
 
       {showVessel && (
         <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          
           <div style={{ marginTop: '16vh', display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{ fontFamily: elegantScript, fontSize: '2.5rem' }}>{toName}</div>
             <div title="...your name in visual form" style={{ width: '18px', height: '18px', border: '0.6px solid #D4AF37', borderRadius: '50%', fontSize: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'help', opacity: 0.6 }}>I</div>
