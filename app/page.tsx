@@ -9,13 +9,13 @@ interface SanctuaryProps {
     text: string;
     bgIndex: number;
     youtubeUrl: string;
-    isReceiver: boolean;
   };
 }
 
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [text, setText] = useState(initialData?.text || 'create your content and transform it into a harmonica of tiles (when ready)');
+  const [fromName, setFromName] = useState(initialData?.fromName || '');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
   const [isReceiver] = useState(initialData?.isReceiver || false);
   const [showVessel, setShowVessel] = useState(true); // Toggle for Cinematic Mode
@@ -23,6 +23,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const vintageFont = "'Great Vibes', cursive"; // Vintage Wedding Script style
+  const [youtubeUrl, setYoutubeUrl] = useState(initialData?.youtubeUrl || '');
 
   // THE HARMONICA ENGINE: Words transform into art tiles.
   const getArtForWord = (word: string) => {
@@ -81,5 +82,5 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
     </main>
   );
 }
-
+export { DiscoverySanctuary };
 export default function Home() { return <Suspense fallback={null}><DiscoverySanctuary /></Suspense> }
