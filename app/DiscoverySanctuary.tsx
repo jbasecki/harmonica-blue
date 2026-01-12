@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export interface SanctuaryProps {
   initialData?: {
@@ -12,14 +12,12 @@ export interface SanctuaryProps {
 }
 
 export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
-  // CORE DATA
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
   const [text, setText] = useState(initialData?.text || 'create your content and transform it into a harmonica of tiles (when ready)');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
   const [youtubeUrl, setYoutubeUrl] = useState(initialData?.youtubeUrl || '');
   
-  // UI & STATE
   const [isReceiver] = useState(!!initialData);
   const [showDashboard, setShowDashboard] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -30,18 +28,19 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const cursiveFont = "'Great Vibes', cursive";
 
-  // HARMONICA ENGINE: Maps first/last letters with gold labels
+  // RESTORED FOCUS LOGIC: Pause background if music plays
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isPlaying && youtubeUrl) videoRef.current.pause();
+      else videoRef.current.play();
+    }
+  }, [isPlaying, youtubeUrl]);
+
+  // HARMONICA ENGINE: Labeled Tiles
   const getTilesForWord = (word: string) => {
     const clean = word.replace(/[^a-zA-Z]/g, "").toUpperCase();
     if (clean.length === 0) return [];
     return clean.length === 1 ? [clean[0]] : [clean[0], clean[clean.length - 1]]; 
-  };
-
-  const handleReply = () => {
-    // Swaps names for the reply
-    const originalSender = fromName;
-    const originalReceiver = toName;
-    window.location.href = `/?to=${encodeURIComponent(originalSender)}&from=${encodeURIComponent(originalReceiver)}`;
   };
 
   const handleStashAndSend = async () => {
@@ -63,87 +62,86 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* Cinematic Background */}
+      {/* BACKGROUND VIDEO: Controlled by 10 buttons */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
-        <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
+        <video 
+          ref={videoRef} 
+          key={bgIndex} 
+          autoPlay 
+          muted 
+          loop 
+          playsInline 
+          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: isPlaying ? 0.3 : 0.7 }} 
+          src={`${bucketUrl}/${bgIndex + 1}.mp4`} 
+        />
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* HEADER */}
-        <div style={{ marginTop: '5vh', textAlign: 'center' }}>
-          <h1 style={{ fontSize: '1.2rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
-          {isReceiver && <p style={{ fontSize: '0.6rem', opacity: 0.6 }}>A GIFT FROM {fromName.toUpperCase()}</p>}
+        {/* HEADER AREA: Restore original name placement */}
+        <div style={{ marginTop: '15vh', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontFamily: cursiveFont, fontSize: '2.5rem' }}>{toName}</span>
+            <div title="Visual name form" style={{ width: '18px', height: '18px', border: '0.6px solid #D4AF37', borderRadius: '50%', fontSize: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'help' }}>i</div>
+          </div>
+          {isReceiver && <p style={{ fontSize: '0.6rem', opacity: 0.6, letterSpacing: '4px' }}>GIFT FROM {fromName.toUpperCase()}</p>}
         </div>
 
-        {/* GLASS VESSEL */}
+        {/* HARMONICA TILES (LABELED) */}
+        <div style={{ display: 'flex', gap: '15px', marginTop: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
+           {text.split(' ').slice(-4).map((word, idx) => (
+             <div key={idx} style={{ display: 'flex', gap: '6px' }}>
+               {getTilesForWord(word).map((ltr, i) => (
+                 <div key={i} style={{ textAlign: 'center' }}>
+                   <img src={`${bucketUrl}/${ltr}5.png`} style={{ width: '40px', border: '0.3px solid #D4AF37', borderRadius: '4px' }} alt="" />
+                   <div style={{ fontSize: '0.4rem', marginTop: '4px', opacity: 0.5 }}>{ltr}</div>
+                 </div>
+               ))}
+             </div>
+           ))}
+        </div>
+
+        {/* GLASS VESSEL: Restored and Margin-Fixed */}
         {showDashboard && (
           <div style={{ 
-            marginTop: 'auto', marginBottom: '8vh', 
-            width: '88%', maxWidth: '850px', height: '600px',
+            marginTop: 'auto', marginBottom: '10vh', 
+            width: '85%', maxWidth: '850px', height: '400px',
             background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)',
             borderRadius: '40px', border: '0.6px solid rgba(212, 175, 55, 0.25)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center',
-            overflowY: 'auto', scrollbarWidth: 'thin', padding: '30px'
+            display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '30px'
           }}>
             
-            {/* VIDEO WINDOW */}
-            {currentVideoId && (
-              <div style={{ width: '100%', aspectRatio: '16/9', marginBottom: '25px', borderRadius: '20px', overflow: 'hidden', border: '0.5px solid #D4AF37' }}>
-                <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${currentVideoId}?autoplay=${isReceiver ? 1 : 0}`} allow="autoplay" frameBorder="0" />
-              </div>
-            )}
-
-            {/* MESSAGE AREA */}
+            {/* WRITING AREA: Centered with Internal Margins */}
             <textarea 
               disabled={isReceiver}
               value={text} 
               onChange={(e) => setText(e.target.value)}
               style={{ 
                 width: '100%', flex: 1, background: 'transparent', border: 'none', 
-                textAlign: 'center', fontSize: '1.8rem', fontFamily: cursiveFont, 
-                color: '#D4AF37', outline: 'none', resize: 'none', padding: '10px 20px'
+                textAlign: 'center', fontSize: '1.6rem', fontFamily: cursiveFont, 
+                color: '#D4AF37', outline: 'none', resize: 'none', 
+                padding: '20px', boxSizing: 'border-box' // FIXED MARGINS
               }} 
             />
 
-            {/* LABELED HARMONICA TILES */}
-            <div style={{ display: 'flex', gap: '20px', margin: '30px 0', flexWrap: 'wrap', justifyContent: 'center' }}>
-               {text.split(' ').slice(-4).map((word, idx) => (
-                 <div key={idx} style={{ display: 'flex', gap: '8px' }}>
-                   {getTilesForWord(word).map((ltr, i) => (
-                     <div key={i} style={{ textAlign: 'center' }}>
-                       <img src={`${bucketUrl}/${ltr}5.png`} style={{ width: '42px', border: '0.3px solid #D4AF37', borderRadius: '4px' }} alt="" />
-                       <div style={{ fontSize: '0.45rem', marginTop: '5px', opacity: 0.5, letterSpacing: '1px' }}>{ltr}</div>
-                     </div>
-                   ))}
-                 </div>
-               ))}
-            </div>
+            {/* STASH BUTTON */}
+            {!isReceiver && (
+              <button onClick={handleStashAndSend} style={{ background: '#D4AF37', color: '#000', padding: '12px 60px', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', letterSpacing: '2px' }}>
+                {isSaving ? 'STASHING...' : 'STASH & SEND'}
+              </button>
+            )}
 
-            {/* ACTIONS */}
-            <div style={{ display: 'flex', gap: '20px', width: '100%', justifyContent: 'center' }}>
-              {isReceiver ? (
-                <button onClick={handleReply} style={{ background: '#D4AF37', color: '#000', padding: '12px 40px', borderRadius: '25px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>
-                  REPLY TO {fromName.toUpperCase()}
-                </button>
-              ) : (
-                <button onClick={handleStashAndSend} style={{ background: '#D4AF37', color: '#000', padding: '15px 60px', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', letterSpacing: '2px' }}>
-                  {isSaving ? 'STASHING...' : 'STASH & SEND'}
-                </button>
-              )}
-            </div>
-
-            {shareableLink && (
-              <div style={{ marginTop: '20px', color: '#D4AF37', fontSize: '0.65rem', textAlign: 'center', borderTop: '0.5px solid #333', paddingTop: '15px', width: '100%' }}>
-                GIFT LINK: <span style={{ textDecoration: 'underline' }}>{shareableLink}</span>
-              </div>
+            {isReceiver && (
+               <button onClick={() => window.location.href = `/?to=${encodeURIComponent(fromName)}&from=${encodeURIComponent(toName)}`} style={{ background: '#D4AF37', color: '#000', padding: '12px 40px', borderRadius: '25px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
+                 REPLY TO {fromName.toUpperCase()}
+               </button>
             )}
           </div>
         )}
 
-        {/* CONTROLS (Sender Only) */}
+        {/* 10 BACKGROUND SELECTORS (SENDER CONTROL) */}
         {!isReceiver && (
-          <div style={{ position: 'absolute', bottom: '2vh', display: 'flex', gap: '10px' }}>
+          <div style={{ position: 'absolute', bottom: '3vh', display: 'flex', gap: '10px' }}>
             {[...Array(10)].map((_, i) => (
               <button key={i} onClick={() => setBgIndex(i)} style={{ width: '25px', height: '2px', background: bgIndex === i ? '#D4AF37' : 'rgba(212, 175, 55, 0.2)', border: 'none' }} />
             ))}
