@@ -1,16 +1,22 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 
-// RESTORED: All original data structures from your zip
+// THE "MAIL SLOT": This interface fix allows the Vercel build to pass
+export interface SanctuaryProps {
+  initialData?: {
+    toName: string;
+    fromName: string;
+    text: string;
+    bgIndex: number;
+    youtubeUrl: string;
+  };
+}
+
 const QUOTES = {
-  Birthday: ["May your day be filled with joy and light.", "Another year wiser, another year stronger.", "Cheers to the beautiful journey ahead."],
+  Birthday: ["May your day be filled with joy and light.", "Another year wiser, another year stronger.", "Cheers to the journey ahead."],
   Bible: ["The Lord is my shepherd. - Psalm 23", "Be strong and courageous. - Joshua 1:9", "Love is patient, love is kind. - 1 Cor 13"],
   Popular: ["Be yourself; everyone else is taken.", "In the end, we only regret the chances we didn't take.", "The best time to plant a tree was 20 years ago."]
 };
-
-export interface SanctuaryProps {
-  initialData?: { toName: string; fromName: string; text: string; bgIndex: number; youtubeUrl: string; };
-}
 
 export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
@@ -29,11 +35,25 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const cursiveFont = "'Great Vibes', cursive";
 
-  // LOGIC: Tiles for names and content
+  // PROPORTIONAL TILE LOGIC: First and last letter harmonica effect
   const getTiles = (input: string) => {
     const clean = input.replace(/[^a-zA-Z]/g, "").toUpperCase();
     if (clean.length < 1) return ['H', 'B'];
     return clean.length === 1 ? [clean[0], clean[0]] : [clean[0], clean[clean.length - 2] || clean[0]];
+  };
+
+  const handleStashAndSend = async () => {
+    setIsSaving(true);
+    const giftId = Math.random().toString(36).substring(2, 12);
+    try {
+      const res = await fetch('/api/stash', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: giftId, toName, fromName, message: text, bgIndex, youtubeUrl }),
+      });
+      if (res.ok) setShareableLink(`${window.location.origin}/gift/${giftId}`);
+    } catch (e) { console.error(e); }
+    setIsSaving(false);
   };
 
   const currentVideoId = youtubeUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
@@ -41,20 +61,20 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* FULL BACKGROUND VIDEO */}
+      {/* BACKGROUND VIDEO */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
-        <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
+        <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: isPlaying ? 0.3 : 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* HEADER */}
+        {/* HEADER AREA */}
         <div style={{ marginTop: '5vh', textAlign: 'center' }}>
           <h1 style={{ fontSize: '1.2rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
           <button onClick={() => setShowDashboard(!showDashboard)} style={{ position: 'absolute', right: '5vw', background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', borderRadius: '50%', width: '45px', height: '45px', fontSize: '0.5rem', cursor: 'pointer' }}>{showDashboard ? 'CLOSE' : 'OPEN'}</button>
         </div>
 
-        {/* TILES ABOVE THE VESSEL */}
+        {/* TOP TILES & NAME */}
         <div style={{ marginTop: '10vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
             {getTiles(toName).map((ltr, i) => (
@@ -63,21 +83,22 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <span style={{ fontFamily: cursiveFont, fontSize: '2.5rem' }}>{toName}</span>
-            <div style={{ width: '18px', height: '18px', border: '0.6px solid #D4AF37', borderRadius: '50%', fontSize: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>i</div>
+            <div style={{ width: '18px', height: '18px', border: '0.6px solid #D4AF37', borderRadius: '50%', fontSize: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'help' }}>i</div>
           </div>
+          {isReceiver && <p style={{ fontSize: '0.6rem', opacity: 0.6, letterSpacing: '4px' }}>GIFT FROM {fromName.toUpperCase()}</p>}
         </div>
 
-        {/* THE GLASS VESSEL (Restored Layout) */}
+        {/* GLASS VESSEL (Restored Layout & Fixed Margins) */}
         {showDashboard && (
           <div style={{ 
             marginTop: 'auto', marginBottom: '8vh', 
             width: '90%', maxWidth: '850px', height: '580px',
             background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(30px)',
             borderRadius: '40px', border: '0.6px solid rgba(212, 175, 55, 0.25)',
-            display: 'flex', flexDirection: 'column', padding: '40px', overflowY: 'auto'
+            display: 'flex', flexDirection: 'column', padding: '40px', overflowY: 'auto', boxSizing: 'border-box'
           }}>
             
-            {/* WRITING AREA: Surgical Margin Fix */}
+            {/* WRITING AREA */}
             <textarea 
               disabled={isReceiver} value={text} onChange={(e) => setText(e.target.value)}
               style={{ width: '100%', flex: 1, background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.8rem', fontFamily: cursiveFont, color: '#D4AF37', outline: 'none', resize: 'none', padding: '20px', boxSizing: 'border-box' }} 
@@ -88,7 +109,7 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
               <div style={{ marginTop: '20px' }}>
                 <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '20px' }}>
                   {Object.keys(QUOTES).map(cat => (
-                    <button key={cat} onClick={() => setQuoteCat(cat as any)} style={{ background: 'none', color: '#D4AF37', border: '0.5px solid #D4AF37', fontSize: '0.6rem', padding: '6px 15px', borderRadius: '5px' }}>{cat}</button>
+                    <button key={cat} onClick={() => setQuoteCat(cat as any)} style={{ background: 'none', color: '#D4AF37', border: '0.5px solid #D4AF37', fontSize: '0.6rem', padding: '6px 15px', borderRadius: '5px', cursor: 'pointer' }}>{cat}</button>
                   ))}
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
@@ -111,7 +132,7 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           </div>
         )}
 
-        {/* BG SELECTORS */}
+        {/* BG SELECTOR DASHBOARD */}
         {!isReceiver && (
           <div style={{ position: 'absolute', bottom: '2vh', display: 'flex', gap: '10px' }}>
             {[...Array(10)].map((_, i) => <button key={i} onClick={() => setBgIndex(i)} style={{ width: '25px', height: '2px', background: bgIndex === i ? '#D4AF37' : 'rgba(212, 175, 55, 0.2)', border: 'none', cursor: 'pointer' }} />)}
