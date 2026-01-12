@@ -9,7 +9,7 @@ export default async function GiftPage({ params }: { params: { id: string } }) {
 
     if (!gift) return notFound();
 
-    // DELIVERS THE PACKAGE TO THE "MAIL SLOT" AT THE FRONT DOOR (../../page)
+    // DELIVERS THE PACKAGE TO THE NEWLY OPENED MAIL SLOT
     return (
       <DiscoverySanctuary 
         initialData={{
