@@ -1,36 +1,33 @@
-import { db } from '@vercel/postgres';
-// If your main file is just called 'page.tsx' in the 'app' folder, use this path:
-import DiscoverySanctuary from '../../page'; 
+import { sql } from '@vercel/postgres';
+import DiscoverySanctuary from '../page';
+import { notFound } from 'next/navigation';
 
 export default async function GiftPage({ params }: { params: { id: string } }) {
-  const client = await db.connect();
-  
-  // Fetch stashed data
-  const { rows } = await client.sql`
-    SELECT * FROM gifts WHERE id = ${params.id};
-  `;
+  try {
+    // 1. THE MAILMAN USES THE OFFICIAL VERCEL DATABASE BAG
+    const { rows } = await sql`SELECT * FROM gifts WHERE id = ${params.id}`;
+    const gift = rows[0];
 
-  if (!rows || rows.length === 0) {
+    // 2. IF THE GIFT ISN'T THERE, HE LEAVES A "NOT FOUND" NOTE
+    if (!gift) {
+      return notFound();
+    }
+
+    // 3. HE DELIVERS THE PACKAGE TO THE CORRECT DOOR (../page)
     return (
-      <div style={{ color: '#D4AF37', textAlign: 'center', marginTop: '30vh', background: '#000', height: '100vh' }}>
-        <h1 style={{ letterSpacing: '10px' }}>HARMONICA</h1>
-        <p style={{ fontStyle: 'italic', opacity: 0.6 }}>This sanctuary has not been found.</p>
-      </div>
+      <DiscoverySanctuary 
+        initialData={{
+          toName: gift.to_name,
+          fromName: gift.from_name,
+          text: gift.message,
+          bgIndex: gift.bg_index,
+          youtubeUrl: gift.youtube_url || '',
+          isReceiver: true
+        }} 
+      />
     );
+  } catch (error) {
+    console.error("Delivery error:", error);
+    return notFound();
   }
-
-  const gift = rows[0];
-
-  return (
-    <DiscoverySanctuary 
-      initialData={{
-        toName: gift.to_name,
-        fromName: gift.from_name,
-        text: gift.message,
-        bgIndex: gift.bg_index,
-        youtubeUrl: gift.yt_url,
-        isReceiver: true 
-      }}
-    />
-  );
 }
