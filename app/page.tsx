@@ -71,7 +71,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
                {text.split(' ').slice(-3).map((word, idx) => (
                  <div key={idx} style={{ display: 'flex', gap: '4px' }}>
                    {getArtForWord(word).map((ltr, i) => (
-                     <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '40px', border: '0.3px solid #D4AF37', borderRadius: '2px' }} alt="" />
+                     <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '40px', border: '0.3px solid #D4AF37', borderRadius:  '2px' }} alt="" />
                    ))}
                  </div>
                ))}
