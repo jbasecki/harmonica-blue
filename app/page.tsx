@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
-// THE "MAIL SLOT": This officially registers the database gift so the build passes.
+// 1. THE "MAIL SLOT": This officially registers the database gift package.
+// Without this, Vercel will continue to show the "IntrinsicAttributes" error.
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -14,7 +15,7 @@ interface SanctuaryProps {
 }
 
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
-  // Use database data if present (for receivers); otherwise, use your default prompt
+  // Use database data if present; otherwise, use the new interactive prompt.
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [text, setText] = useState(initialData?.text || 'create your content and transform it into a harmonica of tiles (when ready)');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
@@ -24,26 +25,26 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   
-  // VINTAGE FONT: Matches the high-contrast loops in your wedding script screenshot.
+  // VINTAGE FONT: Matches the elegant loops in your wedding script screenshot.
   const vintageCursive = "'Great Vibes', cursive"; 
 
-  // ALPHABET HARMONICA ENGINE: Maps the last 3 words into nature art tiles
+  // HARMONICA TILE ENGINE: Every word typed/delivered morphs into nature art.
   const getArtForWord = (word: string) => {
     const clean = word.replace(/[^a-zA-Z]/g, "").toUpperCase();
     if (clean.length === 0) return [];
-    // Returns first and last letter for the visual "harmonica" bookend effect
+    // Returns first and last letter for the visual "harmonica" effect.
     return [clean[0], clean[clean.length - 1]]; 
   };
 
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* THE DANCING VIDEO: Full-screen nature background */}
+      {/* THE DANCING VIDEO: Full-screen nature background revealed by CLOSE button. */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
       </div>
 
-      {/* HEADER & TOGGLE (CLOSE BUTTON) */}
+      {/* HEADER & CINEMATIC TOGGLE */}
       <div style={{ position: 'absolute', top: '5vh', left: '0', width: '100%', zIndex: 10, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <h1 style={{ fontSize: '1.2rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
         <button onClick={() => setShowVessel(!showVessel)} style={{ position: 'absolute', right: '5vw', background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', borderRadius: '50%', width: '45px', height: '45px', fontSize: '0.5rem', cursor: 'pointer' }}>
@@ -54,7 +55,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
       {showVessel && (
         <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           
-          {/* INTERACTIVE NAME & (I) INFO */}
+          {/* VISUAL NAME & (I) INFO TOOLTIP */}
           <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ fontFamily: vintageCursive, fontSize: '2.5rem' }}>{toName}</div>
@@ -62,7 +63,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
             </div>
           </div>
 
-          {/* GLASS WRITING VESSEL: Designed for mobile and desktop */}
+          {/* GLASS WRITING VESSEL: Designed for mobile and desktop screens. */}
           <div style={{ 
             marginTop: 'auto', marginBottom: '15vh', 
             width: '85%', maxWidth: '650px', minHeight: '350px',
@@ -75,7 +76,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
               style={{ width: '100%', height: '120px', background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.4rem', fontFamily: vintageCursive, color: '#D4AF37', outline: 'none', resize: 'none' }} 
             />
 
-            {/* HARMONICA TILE DISPLAY: The "reason" for the sanctuary */}
+            {/* HARMONICA DISPLAY: Visual transformation of the message into art tiles. */}
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
                {text.split(' ').slice(-3).map((word, idx) => (
                  <div key={idx} style={{ display: 'flex', gap: '4px' }}>
@@ -85,15 +86,6 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
                  </div>
                ))}
             </div>
-
-            {/* BACKGROUND NAVIGATION */}
-            {!isReceiver && (
-               <div style={{ display: 'flex', gap: '10px', marginTop: '30px' }}>
-                {[...Array(10)].map((_, i) => (
-                  <button key={i} onClick={() => setBgIndex(i)} style={{ width: '25px', height: '2px', background: bgIndex === i ? '#D4AF37' : 'rgba(212, 175, 55, 0.2)', border: 'none', cursor: 'pointer' }} />
-                ))}
-              </div>
-            )}
           </div>
         </div>
       )}
