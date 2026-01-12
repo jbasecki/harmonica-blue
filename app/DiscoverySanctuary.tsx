@@ -34,7 +34,7 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const cursiveFont = "'Great Vibes', cursive";
 
-  // LOGIC: Proportional Tiles for names and content
+  // PROPORTIONAL TILES ENGINE
   const getTiles = (input: string) => {
     const clean = input.replace(/[^a-zA-Z]/g, "").toUpperCase();
     if (clean.length < 1) return ['H', 'B'];
@@ -60,20 +60,20 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* BACKGROUND VIDEO */}
+      {/* FULL BACKGROUND VIDEO */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
       </div>
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* HEADER AREA */}
+        {/* TOP HEADER */}
         <div style={{ marginTop: '5vh', textAlign: 'center' }}>
           <h1 style={{ fontSize: '1.2rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
           <button onClick={() => setShowDashboard(!showDashboard)} style={{ position: 'absolute', right: '5vw', background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', borderRadius: '50%', width: '45px', height: '45px', fontSize: '0.5rem', cursor: 'pointer' }}>{showDashboard ? 'CLOSE' : 'OPEN'}</button>
         </div>
 
-        {/* TOP TILES & NAME (Restored Proportions) */}
+        {/* TOP TILES & NAME AREA (RESTORED PROPORTIONS) */}
         <div style={{ marginTop: '10vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
             {getTiles(toName).map((ltr, i) => (
@@ -86,23 +86,23 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           </div>
         </div>
 
-        {/* THE GLASS VESSEL (Restored Layout & Fixed Margins) */}
+        {/* GLASS WRITING VESSEL (RESTORED LAYOUT & FIXED MARGINS) */}
         {showDashboard && (
           <div style={{ 
             marginTop: 'auto', marginBottom: '8vh', 
-            width: '90%', maxWidth: '850px', height: '580px',
+            width: '88%', maxWidth: '850px', height: '580px',
             background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)',
             borderRadius: '40px', border: '0.6px solid rgba(212, 175, 55, 0.25)',
             display: 'flex', flexDirection: 'column', padding: '40px', overflowY: 'auto', boxSizing: 'border-box'
           }}>
             
-            {/* WRITING AREA */}
+            {/* WRITING AREA WITH INTERNAL MARGIN FIX */}
             <textarea 
               disabled={isReceiver} value={text} onChange={(e) => setText(e.target.value)}
-              style={{ width: '100%', flex: 1, background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.8rem', fontFamily: cursiveFont, color: '#D4AF37', outline: 'none', resize: 'none', padding: '20px', boxSizing: 'border-box' }} 
+              style={{ width: '100%', flex: 1, background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.8rem', fontFamily: cursiveFont, color: '#D4AF37', outline: 'none', resize: 'none', padding: '25px', boxSizing: 'border-box', lineHeight: '1.5' }} 
             />
 
-            {/* HARMONICA DISPLAY (Labeled Tiles) */}
+            {/* HARMONICA TILE DISPLAY (LABELED) */}
             <div style={{ display: 'flex', gap: '15px', margin: '20px 0', flexWrap: 'wrap', justifyContent: 'center' }}>
                {text.split(' ').slice(-4).map((word, idx) => (
                  <div key={idx} style={{ display: 'flex', gap: '6px' }}>
@@ -116,7 +116,7 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
                ))}
             </div>
 
-            {/* LOWER DASHBOARD */}
+            {/* DASHBOARD CONTROLS */}
             {!isReceiver && (
               <div style={{ marginTop: '20px' }}>
                 <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '20px' }}>
@@ -148,13 +148,15 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
           </div>
         )}
 
-        {/* BG SELECTOR DASHBOARD */}
+        {/* MANUAL BACKGROUND SELECTOR (SENDER ONLY) */}
         {!isReceiver && (
           <div style={{ position: 'absolute', bottom: '2vh', display: 'flex', gap: '10px' }}>
             {[...Array(10)].map((_, i) => <button key={i} onClick={() => setBgIndex(i)} style={{ width: '25px', height: '2px', background: bgIndex === i ? '#D4AF37' : 'rgba(212, 175, 55, 0.2)', border: 'none', cursor: 'pointer' }} />)}
           </div>
         )}
       </div>
+
+      {/* VIDEO PLAYER (HIDDEN) */}
       {isPlaying && currentVideoId && <div style={{ display: 'none' }}><iframe src={`https://www.youtube.com/embed/${currentVideoId}?autoplay=1`} allow="autoplay" /></div>}
     </main>
   );
