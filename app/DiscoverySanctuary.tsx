@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 
-// THIS IS THE ONLY ADDITION: It allows Variant B to work with Vercel again.
+// THIS FIXES THE HANDSHAKE ERROR: It tells Vercel that the "initialData" 
+// package from the Mailman is expected and allowed.
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -12,28 +13,16 @@ interface SanctuaryProps {
   };
 }
 
-// RESTORED: Your original quotes exactly as they were in Variant B
 const QUOTES = {
-  Birthday: [
-    "May your day be filled with joy and light.",
-    "Another year wiser, another year stronger. Happy Birthday!",
-    "Cheers to the beautiful journey ahead of you."
-  ],
-  Bible: [
-    "The Lord is my shepherd; I shall not want. - Psalm 23:1",
-    "Be strong and courageous. - Joshua 1:9"
-  ],
-  Popular: [
-    "Be yourself; everyone else is already taken. - Oscar Wilde",
-    "In the end, we only regret the chances we didn't take."
-  ]
+  Birthday: ["May your day be filled with joy and light.", "Another year wiser.", "Cheers to the journey."],
+  Bible: ["The Lord is my shepherd. - Psalm 23", "Be strong and courageous. - Joshua 1:9"],
+  Popular: ["Be yourself; everyone else is taken.", "Regret the chances you didn't take."]
 };
 
 export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
-  // RESTORED: All original state and logic from your perfect backup
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
-  const [text, setText] = useState(initialData?.text || 'create your content here and transform it into a harmonica of tiles');
+  const [text, setText] = useState(initialData?.text || 'create your content here...');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
   const [youtubeUrl, setYoutubeUrl] = useState(initialData?.youtubeUrl || '');
   const [isReceiver] = useState(!!initialData);
@@ -47,11 +36,11 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   const cursiveFont = "'Great Vibes', cursive";
 
-  // LOGIC: Restored tiles for the name at the top
-  const getNameTiles = (name: string) => {
-    const clean = name.replace(/[^a-zA-Z]/g, "").toUpperCase();
-    if (clean.length === 0) return ['H', 'B'];
-    return [clean[0], clean[clean.length - 2] || clean[0]];
+  // PROPORTIONAL TILES LOGIC: Restored first/last letter harmonica effect
+  const getTiles = (input: string) => {
+    const clean = input.replace(/[^a-zA-Z]/g, "").toUpperCase();
+    if (clean.length < 1) return ['H', 'B'];
+    return clean.length === 1 ? [clean[0], clean[0]] : [clean[0], clean[clean.length - 2] || clean[0]];
   };
 
   const handleStashAndSend = async () => {
@@ -68,64 +57,56 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
     setIsSaving(false);
   };
 
-  const nameTiles = getNameTiles(toName);
+  const currentVideoId = youtubeUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
 
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
-      
-      {/* RESTORED: Background Video with manual selector control */}
-      <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7, zIndex: 1 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
+        <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
+      </div>
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        
-        {/* RESTORED: Names and Tiles at the TOP */}
-        <div style={{ marginTop: '10vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+        <div style={{ marginTop: '5vh' }}>
+          <h1 style={{ fontSize: '1.2rem', letterSpacing: '18px', margin: 0, fontWeight: 300 }}>HARMONICA</h1>
+          <button onClick={() => setShowDashboard(!showDashboard)} style={{ position: 'absolute', right: '5vw', background: 'none', border: '0.5px solid #D4AF37', color: '#D4AF37', borderRadius: '50%', width: '45px', height: '45px', fontSize: '0.5rem', cursor: 'pointer' }}>{showDashboard ? 'CLOSE' : 'OPEN'}</button>
+        </div>
+
+        {/* RESTORED: TOP NAMES & TILES */}
+        <div style={{ marginTop: '10vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
           <div style={{ display: 'flex', gap: '15px' }}>
-            {nameTiles.map((ltr, i) => (
+            {getTiles(toName).map((ltr, i) => (
               <img key={i} src={`${bucketUrl}/${ltr}5.png`} style={{ width: '60px', border: '0.3px solid #D4AF37', borderRadius: '4px' }} alt="" />
             ))}
           </div>
-          <div style={{ fontFamily: cursiveFont, fontSize: '2.5rem' }}>{toName}</div>
+          <span style={{ fontFamily: cursiveFont, fontSize: '2.5rem' }}>{toName}</span>
         </div>
 
-        {/* RESTORED: Glass Vessel with Fixed Internal Margins */}
+        {/* GLASS VESSEL: RESTORED PROPORTIONS & FIXED MARGINS */}
         {showDashboard && (
           <div style={{ 
-            marginTop: 'auto', marginBottom: '12vh', 
-            width: '85%', maxWidth: '900px', height: '420px',
-            background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)',
-            borderRadius: '50px', border: '0.6px solid rgba(212, 175, 55, 0.25)',
-            display: 'flex', flexDirection: 'column', padding: '40px', // FIXED MARGINS
-            boxSizing: 'border-box', overflowY: 'auto'
+            marginTop: 'auto', marginBottom: '8vh', 
+            width: '88%', maxWidth: '850px', height: '580px',
+            background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(30px)',
+            borderRadius: '40px', border: '0.6px solid rgba(212, 175, 55, 0.25)',
+            display: 'flex', flexDirection: 'column', padding: '40px', boxSizing: 'border-box', overflowY: 'auto'
           }}>
             <textarea 
               disabled={isReceiver} value={text} onChange={(e) => setText(e.target.value)}
-              style={{ width: '100%', flex: 1, background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.6rem', fontFamily: cursiveFont, color: '#D4AF37', outline: 'none', resize: 'none', padding: '10px' }} 
+              style={{ width: '100%', flex: 1, background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.8rem', fontFamily: cursiveFont, color: '#D4AF37', outline: 'none', resize: 'none', padding: '20px', boxSizing: 'border-box' }} 
             />
-            
-            {/* RESTORED: DASHBOARD CONTROLS */}
             {!isReceiver && (
-              <div style={{ width: '100%', marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-                <button onClick={handleStashAndSend} style={{ background: '#D4AF37', color: '#000', padding: '15px 60px', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', letterSpacing: '2px' }}>
-                  {isSaving ? 'STASHING...' : 'STASH & SEND'}
-                </button>
-              </div>
+              <button onClick={handleStashAndSend} style={{ alignSelf: 'center', background: '#D4AF37', color: '#000', padding: '15px 50px', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>STASH & SEND</button>
             )}
-
             {isReceiver && (
-               <button onClick={() => window.location.href=`/?to=${encodeURIComponent(fromName)}&from=${encodeURIComponent(toName)}`} style={{ background: '#D4AF37', color: '#000', padding: '12px 40px', borderRadius: '25px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
-                 REPLY TO {fromName.toUpperCase()}
-               </button>
+               <button onClick={() => window.location.href=`/?to=${fromName}&from=${toName}`} style={{ alignSelf: 'center', background: '#D4AF37', color: '#000', padding: '12px 40px', borderRadius: '25px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>REPLY TO {fromName.toUpperCase()}</button>
             )}
           </div>
         )}
 
-        {/* RESTORED: 10 background selectors at the very bottom */}
+        {/* RESTORED: 10 BG SELECTORS */}
         {!isReceiver && (
-          <div style={{ position: 'absolute', bottom: '3vh', display: 'flex', gap: '10px' }}>
-            {[...Array(10)].map((_, i) => (
-              <button key={i} onClick={() => setBgIndex(i)} style={{ width: '25px', height: '2px', background: bgIndex === i ? '#D4AF37' : 'rgba(212, 175, 55, 0.2)', border: 'none', cursor: 'pointer' }} />
-            ))}
+          <div style={{ position: 'absolute', bottom: '2vh', display: 'flex', gap: '10px' }}>
+            {[...Array(10)].map((_, i) => <button key={i} onClick={() => setBgIndex(i)} style={{ width: '25px', height: '2px', background: bgIndex === i ? '#D4AF37' : 'rgba(212, 175, 55, 0.2)', border: 'none', cursor: 'pointer' }} />)}
           </div>
         )}
       </div>
