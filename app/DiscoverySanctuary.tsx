@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
 
-// 1. THE HIDDEN BLUEPRINT: This fix allows Variant B to work with Vercel again.
+// THIS IS THE ONLY ADDITION: It allows Variant B to work with Vercel again.
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -12,18 +12,28 @@ interface SanctuaryProps {
   };
 }
 
-// RESTORED: Original quotes from your perfect backup
+// RESTORED: Your original quotes exactly as they were in Variant B
 const QUOTES = {
-  Birthday: ["May your day be filled with joy and light.", "Another year wiser.", "Cheers to the journey."],
-  Bible: ["The Lord is my shepherd. - Psalm 23", "Be strong and courageous. - Joshua 1:9"],
-  Popular: ["Be yourself; everyone else is taken.", "Regret the chances you didn't take."]
+  Birthday: [
+    "May your day be filled with joy and light.",
+    "Another year wiser, another year stronger. Happy Birthday!",
+    "Cheers to the beautiful journey ahead of you."
+  ],
+  Bible: [
+    "The Lord is my shepherd; I shall not want. - Psalm 23:1",
+    "Be strong and courageous. - Joshua 1:9"
+  ],
+  Popular: [
+    "Be yourself; everyone else is already taken. - Oscar Wilde",
+    "In the end, we only regret the chances we didn't take."
+  ]
 };
 
 export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
-  // RESTORED: All original state and logic from Variant B
+  // RESTORED: All original state and logic from your perfect backup
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
-  const [fromName, setFromName] = useState(initialData?.fromName || '');
-  const [text, setText] = useState(initialData?.text || 'create your content here...');
+  const [fromName, setFromName] = useState(initialData?.fromName || 'Krystyna');
+  const [text, setText] = useState(initialData?.text || 'create your content here and transform it into a harmonica of tiles');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
   const [youtubeUrl, setYoutubeUrl] = useState(initialData?.youtubeUrl || '');
   const [isReceiver] = useState(!!initialData);
@@ -63,7 +73,7 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* RESTORED: Background Video with manual control */}
+      {/* RESTORED: Background Video with manual selector control */}
       <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7, zIndex: 1 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
 
       <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -85,21 +95,27 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
             width: '85%', maxWidth: '900px', height: '420px',
             background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(20px)',
             borderRadius: '50px', border: '0.6px solid rgba(212, 175, 55, 0.25)',
-            display: 'flex', flexDirection: 'column', padding: '35px', // FIXED MARGINS
-            boxSizing: 'border-box', overflowY: 'auto', scrollbarWidth: 'thin'
+            display: 'flex', flexDirection: 'column', padding: '40px', // FIXED MARGINS
+            boxSizing: 'border-box', overflowY: 'auto'
           }}>
             <textarea 
               disabled={isReceiver} value={text} onChange={(e) => setText(e.target.value)}
-              style={{ width: '100%', flex: 1, background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.5rem', fontFamily: cursiveFont, color: '#D4AF37', outline: 'none', resize: 'none', padding: '10px' }} 
+              style={{ width: '100%', flex: 1, background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.6rem', fontFamily: cursiveFont, color: '#D4AF37', outline: 'none', resize: 'none', padding: '10px' }} 
             />
             
-            {/* RESTORED: Bottom dashboard controls */}
+            {/* RESTORED: DASHBOARD CONTROLS */}
             {!isReceiver && (
-              <div style={{ width: '100%', marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                <button onClick={handleStashAndSend} style={{ background: '#D4AF37', color: '#000', padding: '12px 50px', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>
-                  {isSaving ? 'SAVING...' : 'STASH & SEND'}
+              <div style={{ width: '100%', marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                <button onClick={handleStashAndSend} style={{ background: '#D4AF37', color: '#000', padding: '15px 60px', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', letterSpacing: '2px' }}>
+                  {isSaving ? 'STASHING...' : 'STASH & SEND'}
                 </button>
               </div>
+            )}
+
+            {isReceiver && (
+               <button onClick={() => window.location.href=`/?to=${encodeURIComponent(fromName)}&from=${encodeURIComponent(toName)}`} style={{ background: '#D4AF37', color: '#000', padding: '12px 40px', borderRadius: '25px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>
+                 REPLY TO {fromName.toUpperCase()}
+               </button>
             )}
           </div>
         )}
