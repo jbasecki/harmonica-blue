@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, Suspense, useEffect, useRef } from 'react';
 
-// 1. THIS IS THE "MAIL SLOT": This registers the database gift so the build passes.
+// 1. THE "MAIL SLOT": This officially registers the database gift package.
+// Without this interface, the build will continue to fail with the IntrinsicAttributes error.
 interface SanctuaryProps {
   initialData?: {
     toName: string;
@@ -14,17 +15,17 @@ interface SanctuaryProps {
 }
 
 function DiscoverySanctuary({ initialData }: SanctuaryProps) {
-  // Use database data if it exists; otherwise, use your new interactive prompt.
+  // Use database data if present (for receivers); otherwise, use the new interactive prompt.
   const [toName, setToName] = useState(initialData?.toName || 'Mark');
   const [text, setText] = useState(initialData?.text || 'create your content and transform it into a harmonica of tiles (when ready)');
   const [bgIndex, setBgIndex] = useState(initialData?.bgIndex ?? 0);
   const [isReceiver] = useState(initialData?.isReceiver || false);
-  const [showVessel, setShowVessel] = useState(true); // Cinematic Toggle
+  const [showVessel, setShowVessel] = useState(true); // Cinematic Mode Toggle
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const bucketUrl = "https://storage.googleapis.com/simple-bucket-27";
   
-  // VINTAGE FONT: Matches the elegant loops in your wedding script screenshot.
+  // VINTAGE FONT: Matches the high-contrast loops in your wedding script screenshot.
   const vintageCursive = "'Great Vibes', cursive"; 
 
   // HARMONICA TILE ENGINE: Every word typed/delivered morphs into nature art.
@@ -38,7 +39,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', color: '#D4AF37', overflow: 'hidden', position: 'relative' }}>
       
-      {/* BACKGROUND VIDEO: Revealed in full when CLOSE is clicked. */}
+      {/* FULL BACKGROUND VIDEO: Revealed in full 100% when CLOSE is clicked. */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }}>
         <video ref={videoRef} key={bgIndex} autoPlay muted loop playsInline style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
       </div>
@@ -54,7 +55,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
       {showVessel && (
         <div style={{ position: 'relative', zIndex: 2, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           
-          {/* INTERACTIVE NAME & (I) INFO */}
+          {/* VISUAL NAME & (I) INFO TOOLTIP */}
           <div style={{ marginTop: '16vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ fontFamily: vintageCursive, fontSize: '2.5rem' }}>{toName}</div>
@@ -75,7 +76,7 @@ function DiscoverySanctuary({ initialData }: SanctuaryProps) {
               style={{ width: '100%', height: '120px', background: 'transparent', border: 'none', textAlign: 'center', fontSize: '1.4rem', fontFamily: vintageCursive, color: '#D4AF37', outline: 'none', resize: 'none' }} 
             />
 
-            {/* HARMONICA DISPLAY: Visual transformation of text into art tiles. */}
+            {/* HARMONICA TILE DISPLAY: Visual transformation of text into art tiles. */}
             <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginTop: '20px', flexWrap: 'wrap' }}>
                {text.split(' ').slice(-3).map((word, idx) => (
                  <div key={idx} style={{ display: 'flex', gap: '4px' }}>
