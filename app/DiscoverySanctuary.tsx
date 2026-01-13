@@ -47,14 +47,13 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
   return (
     <main style={{ height: '100vh', width: '100vw', background: '#000', overflow: 'hidden', position: 'relative' }}>
       
-      {/* BACKGROUND VIDEO */}
       <video key={bgIndex} autoPlay muted loop playsInline style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7, zIndex: 1 }} src={`${bucketUrl}/${bgIndex + 1}.mp4`} />
 
       <div style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
         <h1 style={{ marginTop: '4vh', letterSpacing: '18px', color: '#D4AF37', fontSize: '0.9rem', fontWeight: 300, opacity: 0.8 }}>HARMONICA</h1>
 
-        {/* TOP BRIDGE */}
+        {/* TOP ANCHOR */}
         <div style={{ marginTop: '3vh', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
           <div style={{ display: 'flex', gap: '10px' }}>
             {getNameTiles(toName).map((ltr, i) => (
@@ -65,16 +64,15 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
             <span style={{ fontFamily: cursiveFont, fontSize: '2.5rem', color: '#D4AF37' }}>{toName}</span>
             <div style={{ width: '16px', height: '16px', border: '0.5px solid #D4AF37', borderRadius: '50%', fontSize: '0.5rem', color: '#D4AF37', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.5 }}>i</div>
           </div>
-          {isReceiver && <p style={{ fontSize: '0.6rem', color: '#D4AF37', opacity: 0.6, letterSpacing: '4px', marginTop: '5px' }}>GIFT FROM {fromName.toUpperCase()}</p>}
         </div>
 
-        {/* THE GLASS VESSEL - CENTERED & LARGE */}
+        {/* THE GLASS VESSEL - FORCE CENTERED */}
         <div style={{ 
           marginTop: 'auto', marginBottom: '10vh', 
           width: '88%', maxWidth: '850px', height: '450px',
           background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(35px)', WebkitBackdropFilter: 'blur(35px)',
           borderRadius: '45px', border: '0.7px solid rgba(212, 175, 55, 0.25)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', // Vertical Center
           padding: '40px', boxSizing: 'border-box'
         }}>
           <textarea 
@@ -82,33 +80,28 @@ export function DiscoverySanctuary({ initialData }: SanctuaryProps) {
             value={text} 
             onChange={(e) => setText(e.target.value)}
             style={{ 
-              width: '100%', flex: 1, background: 'transparent', border: 'none', 
-              textAlign: 'center', // HORIZONTAL CENTERING
-              fontSize: '2.4rem', // BOLD VINTAGE SIZE
-              fontFamily: cursiveFont, color: '#D4AF37', outline: 'none', resize: 'none',
-              padding: '10px'
+              width: '100%', background: 'transparent', border: 'none', 
+              color: '#D4AF37', fontFamily: cursiveFont,
+              fontSize: '2.8rem', // Massive visibility
+              textAlign: 'center', // Horizontal Center
+              outline: 'none', resize: 'none',
+              lineHeight: '1.4',
+              display: 'block', margin: 'auto' // Force browser centering
             }} 
           />
 
           {!isReceiver && (
-            <button 
-              onClick={handleStashAndSend} 
-              style={{ marginTop: '20px', background: '#D4AF37', color: '#000', padding: '12px 60px', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer', letterSpacing: '2px', flexShrink: 0 }}
-            >
-              {isSaving ? 'STASHING...' : 'STASH & SEND'}
+            <button onClick={handleStashAndSend} style={{ position: 'absolute', bottom: '30px', background: '#D4AF37', color: '#000', padding: '10px 50px', borderRadius: '30px', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>
+              STASH & SEND
             </button>
-          )}
-
-          {shareableLink && (
-            <div style={{ marginTop: '15px', fontSize: '0.6rem', color: '#D4AF37' }}>READY: {shareableLink}</div>
           )}
         </div>
 
-        {/* 10 BACKGROUND SELECTORS */}
+        {/* BACKGROUND SELECTORS */}
         {!isReceiver && (
           <div style={{ position: 'absolute', bottom: '3vh', display: 'flex', gap: '12px' }}>
             {[...Array(10)].map((_, i) => (
-              <button key={i} onClick={() => setBgIndex(i)} style={{ width: '30px', height: '2px', background: bgIndex === i ? '#D4AF37' : 'rgba(212, 175, 55, 0.15)', border: 'none', cursor: 'pointer' }} />
+              <button key={i} onClick={() => setBgIndex(i)} style={{ width: '30px', height: '2px', background: bgIndex === i ? '#D4AF37' : 'rgba(212, 175, 55, 0.15)', border: 'none' }} />
             ))}
           </div>
         )}
